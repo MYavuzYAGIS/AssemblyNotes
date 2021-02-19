@@ -67,6 +67,50 @@ the push instruction aautomatically decrements the stack pointter, esp, by 4. Wh
 take a Dword off the stack, put it ina a register and increment esp by 4 ( reverse of Push)
 
 
+`CALL` ==> Call's job is to transfer control to a different function in a way that control can later be resumed where it left off.
+
+First it pushes the address of the next instruction onto the stack.  for use by RET(return from procedure) for when the procedure is done.
+
+Because idea behind a function is , do this and I will keep executing from the next line. So call also pushes the address of the next instruction set, so that once the called function is completed, the program keeps continuing from where it left off. Its a reminder to where to return to after executing the function.
+
+Then it changes eip to the address given in the instruction.
+
+DEstionation address can be specified in a multiple ways. 
+
+- Absolute address  ==> address 0x0030434 
+
+- Relative address(relative the the end of the instruction) ==> some adress that hex 50 bytes ta ta ta. 
+
+`RET`==> Return from Procedure.
+
+Two forms :
+
+1) pop the top of the stack into the eip
+
+in this form, the instructuon ius just written as ret.
+
+typically used by cdecl functiuons
+
+2) pop the top of the stacj into eip and add a constatn number of bytes to esp. 
+
+in this form , the instruction is written as ret 0x8 of 0x20 etc. typically used bty stdcall fucntions
+
+
+
+`MOV` ==> Move.
+
+Can move:
+
+register to register
+
+memory to register, register to memory, immediate to reguster immediate to memory.
+
+> NEVER MEMORY TO MEMORY
+
+>Memory addresses are given in r/m32 from. 
+
+
+
 
 ## THE STACK
 
@@ -101,3 +145,42 @@ in order to reverse the action above, we `pop eax`and voila, esp jumped by 4 byt
 
 ![pop eax](img/pop%20eax.png)
 
+> Everything numerically under esp is considered to be undefined. Although there is a data over there, it is not of our business. 
+
+> once we call pop eax, the the value at the top of the stack (eax) is taken to the register and that memory spot is not undefined.
+
+
+### Calling Convention
+
+calling convention is about how to pass parameters and how to get parameters back.
+
+how code calls a subroutine is compiler-dependent and configurable. But there are few conventions. We will deal with cdecl and stdcall conventions.
+
+### cdecl
+
+C Declaration. The most common calling convention. Function parameters pushed (using push)  onto stack RIGHT TO LEFT. Saves the old stace frame pointer and sets up a new stack frame.  
+
+eax or edx:eax returns the result for primitive data types.
+
+Most significant 32 bits go into edx, least significant bits go into eax
+
+Also values are always big endian in registers, in memory they are little endian.
+
+so for example :  `printf(%d\n, myVariable)`  ===> from right to left: push my variable to the stack then ppusth the pointer and trhen call the function.
+
+function here, saves the old frame pointer, saves the address to the stack.
+
+`Caller` is responsible for cleaning up the stack.  ==> 
+
+so we have 2 parameters and 1 function call. push push and call. so whatever regiester is calling the function is also responsible to clean up the stack
+
+
+
+### stdcall
+
+
+Microsoft C++ code e.g. Win32API
+parameters pushed onto stack right to left
+saves the old stack frame pointer and sets up a new stack frame pointer
+
+HERE, CALLEE is responsibnle for cleaning ip any stack parameters it takes not the CALLER!
