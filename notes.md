@@ -105,6 +105,8 @@ register to register
 
 memory to register, register to memory, immediate to reguster immediate to memory.
 
+immediate is hardcoded value. 
+
 > NEVER MEMORY TO MEMORY
 
 >Memory addresses are given in r/m32 from. 
@@ -184,3 +186,38 @@ parameters pushed onto stack right to left
 saves the old stack frame pointer and sets up a new stack frame pointer
 
 HERE, CALLEE is responsibnle for cleaning ip any stack parameters it takes not the CALLER!
+
+
+## General Stack Frame Operation
+
+We are going to assume that the main() is the very first function being executed in a program. This is what its stack looks like to start witrh.
+
+![stackframeop](img/stackframeop.png)
+
+
+Low addresses at the bottom, high addresses at the top.
+
+The more I add to the stack, the more I expect it to grow to the bottom.
+
+So first thing main does is to preserve space on the stack for the local variables. When main() decides to call a subroutine, main() becomes the caller. We will assume main() has some registers it would like to remain the same, so it will save them. We will also assume that the callee function stakes some input args. 
+
+so , local variables, caller-save registers, and Args to pass to callee are in main() stack frame at the bottom of the stack.
+
+so right to left, local variables, caller-save registers, args to pass to callee and then function call.
+
+when we execute the call instruction, the return address(RET) gerts save onto the stackm and becuse the next instruction after the call will be the beginning of the called function, wer consiter the frame to have changed to the callee.
+
+
+![stackframe](img/stackframe.png)
+
+next, when subroutine starts, the frame pointer(ebp) still points to the main()'s frame. so tthe first thing it does is to save the old frame pointer on the starck and set the new value to point to its own frame.
+
+so at the main() fnction, ebp is pointing at the top of the frame. when a subroutine is called, it will save this adress to stack , take the ebp and contibnue its function, once the function is finished, it will restore the value of ebp so that the next subroutines can take up to from original ebp register.
+
+
+> STACK FRAMES AR A LINKED LIST!
+
+    The ebp in the current frame points at the saved ebp of the previous frame
+
+
+![exapmpe1](img/exapmpe1.png)
