@@ -444,6 +444,106 @@ The next move, of course, is to destroy the pointers from the stack which is `po
 
 > **NOTE**: In VM Visual C++ Express, standard C libraries are not auto-recognized and yields debug error. In order to fix it, Under the project properties we need to add the address manually. In my case this was `C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include`.
 
+### Example2.c
+
+```c
+#include <stdlib.h>
+int sub(int x, int y){
+	return 2*x+y;
+}
+
+int main(int argc, char ** argv){
+	int a;
+	a = atoi(argv[1]);
+	return sub(argc,a);
+}
+```
+Takes arguments, since arguments (argv) are string, it converts it to int using atoi. then uses this variable in the sub() function, makes the arithmetic.
+
+then returns the return of sub function. So main returns the return of sub.
+
+here is the disassembled version of the code alongside the C code :
 
 
 
+```asm
+
+#include <stdlib.h>
+int sub(int x, int y){
+009E1020  push        ebp  
+009E1021  mov         ebp,esp  
+	return 2*x+y;
+009E1023  mov         eax,dword ptr [ebp+8]  
+009E1026  mov         ecx,dword ptr [ebp+0Ch]  
+009E1029  lea         eax,[ecx+eax*2]  
+}
+009E102C  pop         ebp  
+009E102D  ret  
+--- No source file -------------------------------------------------------------
+009E102E  int         3  
+009E102F  int         3  
+--- c:\users\mehmetyavuzyagis\desktop\intotoasm\example2\example2.c ------------
+
+int main(int argc, char ** argv){
+009E1030  push        ebp  
+009E1031  mov         ebp,esp  
+009E1033  push        ecx  
+	int a;
+	a = atoi(argv[1]);
+009E1034  mov         eax,dword ptr [ebp+0Ch]  
+009E1037  mov         ecx,dword ptr [eax+4]  
+009E103A  push        ecx  
+009E103B  call        dword ptr ds:[009E6238h]  
+009E1041  add         esp,4  
+009E1044  mov         dword ptr [ebp-4],eax  
+	return sub(argc,a);
+009E1047  mov         edx,dword ptr [ebp-4]  
+009E104A  push        edx  
+009E104B  mov         eax,dword ptr [ebp+8]  
+009E104E  push        eax  
+009E104F  call        009E1005  
+009E1054  add         esp,8  
+}
+009E1057  mov         esp,ebp  
+009E1059  pop         ebp  
+009E105A  ret  
+```
+
+
+> NOTE  if you see `ebp + something`  this something is a passed argument that is trying to reach to memory
+
+> NOTE  if you see `ebp - something`  this passing a local variable.
+
+
+`011A1033  push        ecx  `  actually smart way to allocate a place for `int a;` 4 byte integer allocation. made by the compiler automatically. Thus, pushing ecx, 4 bytes, between ebp and esp , not stack has one 4 byte variable `a`.
+
+Also checking the stack currently we can see that there is a 4 bytes difference between them:
+
+![4bytes](img/registers.png)
+
+
+`009E1034  mov         eax,dword ptr [ebp+0Ch]  `  here, [ebp +0Ch] is the argv[1] spefified in  r/m32 Addressing Forms. So it is goint to ebp, skipping the argv[o] which is the name of the program(example2) and reaching to argv[1]
+
+
+`01001047  mov         edx,dword ptr [ebp-4]   `  here, [ebp-4] is the first parameter we want in the subroutine and
+
+we save the value to the edx and next, we push the `edx` to the stack.
+
+`0100104B  mov         eax,dword ptr [ebp+8]` here [ebp+8] is the second parameter we want in the subroutine.
+
+we save the value to the `eax` and we push the  velue `eax` to the stack.
+
+Now both of the values of the parameters are defined and in the stack.
+
+next `0100104F  call        01001005  ` this calls the subroutine sub() at the address 0x01001005. that is the initial address of the sub()
+
+
+
+
+**> NOTE  if you see `ebp + something`  this something is a passed argument that is trying to reach to memory**
+
+**> NOTE  if you see `ebp - something`  this passing a local variable.**
+
+`01001054  add         esp,8  ` I had passed two parameters above, now the function is executed so I need to clean them up. for 2 integers from 4 bytes, I add 8 to esp.
+
+then moving esp to ebp to destroy the local variables in the stack and popping the ebp and retting. exiting the program
