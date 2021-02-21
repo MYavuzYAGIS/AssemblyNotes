@@ -114,6 +114,17 @@ immediate is hardcoded value.
 
 `ADD` ==> a = a+ b    for example add eax,ebx  means  eax = eax + ebx.  so it summs them and writes on what is on the left side
 
+`SUB` ==> subtraction. sub eax, [ebx*2]
+
+`LEA` ==> Load Effective Address.  ==> frequently used with pointer arithmetic sometimes for just arithmetic in general. uses the r/m32 form but **is the exception to the rule**
+
+Lea makes the calcualtion and appoints to the destination without disturbing the memory. Does the calc on the spot.
+
+
+that the [] syntax means dereference("value at")
+
+example: ebx = 0X2, edx =0x1000      --- lea eax,[edx+ebx*2]   **eax = 0X1004, not the value at 0x1004!!**
+
 
 ## THE STACK
 
@@ -418,4 +429,21 @@ when ebp is pointing to `0`, `base +(index * scale )` will iterate through the a
 what does this mean ? ==> `- mov eax, [ebx]`  go to ebx, read what is in that memory address, read 4 bytes from memory and write it on eax.
 
 > Note that brackets can be on one side or on the other side but never on both sides because there is not memory to memory operation!
+
+just before exiting a function, generally the main function, we generally see the register mneomic `mov ebp,esp` meaning level the base and the top pointers of the stack.
+
+In practice this means destroy all the local variables in the stack. We are closing down the shop, nothing should be left in the stack.
+
+Yani we are carrying the bottom level pointer(ebp) to the top level (esp) and thus whatever downwards of the esp is garbage, undefined. No more in the stack.
+
+
+The next move, of course, is to destroy the pointers from the stack which is `pop ebp` and finally `retn`.
+
+`retn == ret`
+
+
+> **NOTE**: In VM Visual C++ Express, standard C libraries are not auto-recognized and yields debug error. In order to fix it, Under the project properties we need to add the address manually. In my case this was `C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include`.
+
+
+
 
