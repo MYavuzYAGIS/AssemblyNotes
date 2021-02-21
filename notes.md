@@ -547,3 +547,92 @@ next `0100104F  call        01001005  ` this calls the subroutine sub() at the a
 `01001054  add         esp,8  ` I had passed two parameters above, now the function is executed so I need to clean them up. for 2 integers from 4 bytes, I add 8 to esp.
 
 then moving esp to ebp to destroy the local variables in the stack and popping the ebp and retting. exiting the program
+
+Until now we used the following instructions:
+
+```
+NOP ==> copies eax to eax. so doing nothing
+PUSH ==> pushes from register to memory
+POP  ==> pops from memory to register
+CALL ==> pushes the address of the next instruction to the stack, changes eip to the next instruction.
+RET-RETN
+MOV ==> register to register, register to memory , immediate(hardcoded) NEVER Memory to Memory!
+LEA ==> instead of using r/m32 form, It makes its operations right on the spot
+ADD ==> takes second parameter, adds to the first parameter and saves the result to the first parameter.
+SUB
+```
+
+
+```c
+#include<stdio.h>
+int main(){
+	printf("Hello World!\n");
+	return 0x1234;
+}
+```
+This is a basic C code for hello world.
+
+the assembly version is basic:
+
+```asm
+push ebp
+mov ebp, esp
+push offsetaHelloWorld;"Hello world\n"
+call ds:__imp__printf
+add esp,4
+mov eax,1234h
+pop ebp
+retn
+```
+
+
+```
+push ebp
+mov ebp, esp
+```
+creating the stack
+
+```
+push offsetaHelloWorld;"Hello world\n"
+call ds:__imp__printf
+```
+pushing the hello World string from the pointer into the stack (from Right to left remember?)
+calling the printf function.
+
+`add esp,4`
+
+adding 4 to esp to destroy the data in the stack.
+
+`mov eax,1234h`
+
+per code, returing 0x1234 since eax holds the return values
+
+```
+pop ebp
+retn
+```
+popping off the ebp to clear the stackframe and exiting the function.
+
+
+
+```asm
+#include<stdio.h>
+int main(){
+01091000  push        ebp  
+01091001  mov         ebp,esp  
+	printf("Hello World!\n");
+01091003  push        offset ___globallocalestatus-10h (1093000h)  
+01091008  call        dword ptr [__imp__printf (10920A8h)]  
+0109100E  add         esp,4  
+	return 0x1234;
+01091011  mov         eax,1234h  
+}
+01091016  pop         ebp  
+01091017  ret  
+```
+
+Here is the step by step resolution.
+
+
+
+
