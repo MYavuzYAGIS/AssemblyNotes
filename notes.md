@@ -378,7 +378,44 @@ in **Intel Syntax**, most iof the tuimne square brackets([]) means to treat the 
 
 - mov eax,ebx
 - mov eax, [ebx]
-- mov eax, [ebx+ecx*X]
+- mov eax, [ebx+ecx*X]  => X can be 1,2,4 or 8.
+
+so for example here, it means,  take the ecx(lets say 0x00344F) and multiply it with X, go to the address in this multiplication, add it to ebx, and write the cumulation to eax.
+
+
 
 the most complicated form is : [base + index * scale + disp]
+
+base +(index * scale ) + displacement.
+
+mov eax ,[ebx+ecx*X+Y] where Y is one byte(0-255) or 4 bytes(0-2˜32-1)
+
+
+Scenario :  data type we have is an array. Its consequential data type. So ebx points to the base of the Array, beginning point of the array. Ecx is the index number(so A[0]) in this case what should be the X? it could be a 4 byte element, 2 bytes elements. so to jump to correct next position, X is the length of the element.
+
+base + 0x4
+
+base + 1x4
+
+base + 2x4
+
+so 4 is the elements length. hence, ecx * X is jumping to the next element in each iteration.
+
+so what is displacement then ? Why is is used? 
+
+When the given array is `multidimensional` array. so to give an idea: 
+
+Scenario :  in the C code I have 2 arrays of 10 bytes. I want to iterate over each array. using `base +(index * scale )`, I started at the base0 of the array1 and went through all the elements. Now I want to jump to the second array right?  So in order to move the ebx to the base of the second array, I use displacemenet constant.
+
+
+[0,1,2,3,4,5,6,7,8,9] [B0,B1,B2,B3,B4,B5,B6,B7,B8,B9]
+
+when ebp is pointing to `0`, `base +(index * scale )` will iterate through the array. now I eax is pointing to `9` but I want to jump to `B0`. Addinng the `displacement` constant to ebp will help pointer to jump to `B0`
+
+
+
+
+what does this mean ? ==> `- mov eax, [ebx]`  go to ebx, read what is in that memory address, read 4 bytes from memory and write it on eax.
+
+> Note that brackets can be on one side or on the other side but never on both sides because there is not memory to memory operation!
 
