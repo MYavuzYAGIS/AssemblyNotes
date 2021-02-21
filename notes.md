@@ -205,7 +205,7 @@ So first thing main does is to preserve space on the stack for the local variabl
 so , local variables, caller-save registers, and Args to pass to callee are in main() stack frame at the bottom of the stack.
 
 so right to left, local variables, caller-save registers, args to pass to callee and then function call.
-
+git 
 when we execute the call instruction, the return address(RET) gerts save onto the stackm and becuse the next instruction after the call will be the beginning of the called function, wer consiter the frame to have changed to the callee.
 
 
@@ -348,3 +348,37 @@ Some notes:
 since sub() is a deadcode , meaning its return value 0xFOOD, is not used for anything, compiler with optimization option on would delete sub() function.
 
 because there are not input parameters to sub(), there is no diff whether we compile cdecl or stdcall calling convention.
+
+in the debugger when we jump to the assembly debugger here is the C code and the corresponding assembly code : 
+
+
+```asm
+int main(){
+011E1010  push        ebp  
+011E1011  mov         ebp,esp  
+	sub();
+011E1013  call        sub (11E1000h)  
+	return 0xf00d;
+011E1018  mov         eax,0F00Dh  
+}
+011E101D  pop         ebp  
+011E101E  ret  
+
+```
+
+Lets do another example.
+
+![example2](img/example2.png)
+
+
+## r/m32 Addressing Forms
+
+Anywhere you see an r/m32 it means it could be taking a value either from a register of a memory address. (r/m == register/memory)
+in **Intel Syntax**, most iof the tuimne square brackets([]) means to treat the value within as a memory address and ffetch the value at the address(like dereferencing pointer)
+
+- mov eax,ebx
+- mov eax, [ebx]
+- mov eax, [ebx+ecx*X]
+
+the most complicated form is : [base + index * scale + disp]
+
