@@ -140,6 +140,20 @@ absolute indirect : indirect address calculated with r/m32
 
 `jmp -2` is infinite loop for short relative jmp :)
 
+Conditional Jumps: `je, jge, jne, jle`
+
+
+`JCC` ==> Jump if Condition is met. 
+
+`JNE` == `JNZ` jump if not equal means jump if not zero. What does it mean ? jne a b for example. the operation is a-b. so flag is either 0 or <0 or 0> 
+
+so 0 means equal. if not equal, its not zero. So it makes zero flag check
+
+
+`TEST` ==> computes the bit-wise logical AND of first operant(source 1 operand) and teh second operand(source 2 operand) and sets the SF, ZFand PF staus flags accordingly.
+
+like CMP, sets the flags and does not save the results
+
 
 
 
@@ -703,3 +717,119 @@ mylabel:
 01151036  pop         ebp  
 01151037  ret 
 ```
+so here the interesting code piece is `01151013  jmp         01151023 ` part. It jumps to the given eip and code keeps executing from there on.
+
+printf("skipped\n");Keep in mind that, whatever under the GOTO was skipped due to the unconditional jump of the jmp. So we literally skipped the part `printf("skipped\n");`
+
+Lets see the new C code and the resolution alongside assembly for jmp comparisons:
+
+here is the C code:
+```c
+int main(){
+	int a=1, b=2;
+	if(a == b){
+		return 1;
+	}
+	if(a > b){
+		return 2;
+	}
+	if(a < b){
+		return 3;
+	}
+	return 0xdefea7;
+}
+```
+
+```asm
+int main(){
+00831010  push        ebp  
+00831011  mov         ebp,esp  
+00831013  sub         esp,8  
+	int a=1, b=2;
+00831016  mov         dword ptr [ebp-4],1  
+0083101D  mov         dword ptr [ebp-8],2  
+	if(a == b){
+00831024  mov         eax,dword ptr [ebp-4]  
+00831027  cmp         eax,dword ptr [ebp-8]  
+0083102A  jne         00831033  
+		return 1;
+0083102C  mov         eax,1  
+00831031  jmp         00831056  
+	}
+	if(a > b){
+00831033  mov         ecx,dword ptr [ebp-4]  
+00831036  cmp         ecx,dword ptr [ebp-8]  
+00831039  jle         00831042  
+		return 2;
+0083103B  mov         eax,2  
+00831040  jmp         00831056  
+	}
+	if(a < b){
+00831042  mov         edx,dword ptr [ebp-4]  
+00831045  cmp         edx,dword ptr [ebp-8]  
+00831048  jge         00831051  
+		return 3;
+0083104A  mov         eax,3  
+0083104F  jmp         00831056  
+	}
+	return 0xdefea7;
+00831051  mov         eax,0DEFEA7h  
+}
+00831056  mov         esp,ebp  
+00831058  pop         ebp  
+00831059  ret  
+```
+
+Now be careful in this assembly, we have some important mnemonics: `cmp, jne, jle, jge`
+
+In order to create space for two local variables, the compiler pushed the esp by 8 bytes : `00831013  sub         esp,8  `
+
+after creating space in the stackframe, values 1 and 2 are assigned. :
+
+```asm
+00831016  mov         dword ptr [ebp-4],1  
+0083101D  mov         dword ptr [ebp-8],2  
+```
+
+ebp-4 ==1 and ebp-8 ==2
+
+```asm
+00831024  mov         eax,dword ptr [ebp-4]  
+00831027  cmp         eax,dword ptr [ebp-8]  
+0083102A  jne         00831033
+```
+
+it takes the dereferenced pointer value of [ebp-4] to the eax. (which is 1)
+
+then it compares the eax to dereferenced pointer value of [ebp-8] (which is 2)
+
+if not equal (jne) jumps to the given address ahead : `00831033`
+
+
+### Then How do we set flags?
+
+before making a conditional jump, we need something to set the condition flags for me.
+
+this is typically done with CMP(compare) TEST, or some other flag-setting mneomics.
+
+so for example ZeroFlag is set is some operation is zero. In this codebase, this was the comparison of two integers by cmp.
+
+although cmp is same as sub, sub saves the result but cmp just uses it to set flags, never touches the original values.
+
+so also there should be another jump instruction after the cmp to follow if the comparison is 0. 
+
+in our example:
+
+```asm
+	if(a == b){
+00831024  mov         eax,dword ptr [ebp-4]  
+00831027  cmp         eax,dword ptr [ebp-8]  
+0083102A  jne         00831033  
+		return 1;
+0083102C  mov         eax,1  
+00831031  jmp         00831056 
+```
+
+`00831031  jmp         00831056 `  this one.
+
+this line jumps to thje end where stackframe is destroyed and functrion is terminated.
