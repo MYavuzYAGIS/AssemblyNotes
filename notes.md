@@ -126,6 +126,23 @@ that the [] syntax means dereference("value at")
 example: ebx = 0X2, edx =0x1000      --- lea eax,[edx+ebx*2]   **eax = 0X1004, not the value at 0x1004!!**
 
 
+`JMP` ==> Jump. Changes the eip unconditionally of the given address. Main forms of the address.
+
+short relative : 1 byte displacement from the end of the instruction.
+
+`01151015  jmp        1155000h` doesnt have the number `1155000h` anywhere in it, it is really `jmp 0x0E` btyes forward.
+
+near relative: 4 bytes displacement from the curent eip
+
+absolute: hardcoded address in instruction. like `01151013  jmp         01151023 `
+
+absolute indirect : indirect address calculated with r/m32
+
+`jmp -2` is infinite loop for short relative jmp :)
+
+
+
+
 ## THE STACK
 
 stack is the conceptiual area of main memory which is designated by OS when program is started. Stack is LIFO/FILO data structure where data is pushed on to top of the stack and popped off the top
@@ -634,5 +651,55 @@ int main(){
 Here is the step by step resolution.
 
 
+## Control Flow in Assembly
+
+There are 2 kinds of control flows.
+
+- conditional : go somewhere if a condition is met. Think "if"s, switches, loops
+- unconditional : go somewhere no matter what. Procedure calls, goto, exceptions, interrupts.
+
+some of the procedure calls manifest themselves as push/call/ret
+
+Now its time to see `goto` in assembly.
 
 
+here is the source code for the current example to learn GOTO
+
+```c
+//Goto example
+#include <stdio.h>
+int main(){
+	goto mylabel;
+	printf("skipped\n");
+mylabel:
+	printf("goto ftw!\n");
+	return 0xf00d;
+}
+
+```
+
+here is the step by step resolution.
+
+
+```asm
+#include <stdio.h>
+int main(){
+01151010  push        ebp  
+01151011  mov         ebp,esp  
+	goto mylabel;
+01151013  jmp         01151023  
+	printf("skipped\n");
+01151015  push        1155000h  
+0115101A  call        dword ptr ds:[01156238h]  
+01151020  add         esp,4  
+mylabel:
+	printf("goto ftw!\n");
+01151023  push        115500Ch  
+01151028  call        dword ptr ds:[01156238h]  
+0115102E  add         esp,4  
+	return 0xf00d;
+01151031  mov         eax,0F00Dh  
+}
+01151036  pop         ebp  
+01151037  ret 
+```
