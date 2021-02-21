@@ -154,6 +154,15 @@ so 0 means equal. if not equal, its not zero. So it makes zero flag check
 
 like CMP, sets the flags and does not save the results
 
+`AND` ==> destination operand can be r/m32 or register. source operand can be r/m32 or register or immediate!
+
+`and al, bl`
+
+`and eax, 0x42`
+
+
+
+`OR`==> destination operand can be r/m32 or register. source operand can be r/m32 or register or immediate!
 
 
 
@@ -833,3 +842,9 @@ in our example:
 `00831031  jmp         00831056 `  this one.
 
 this line jumps to thje end where stackframe is destroyed and functrion is terminated.
+
+
+
+https://www.youtube.com/watch?v=zUNu0glHMwI&list=PL038BE01D3BAEFDB0&index=4
+
+55:46
