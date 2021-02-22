@@ -867,3 +867,28 @@ in our example:
 this line jumps to thje end where stackframe is destroyed and functrion is terminated.
 
 > `je` is the same as `jz`  because zero flag is still essentially an equality check. in assembly code, je and jz does exactly the same thing.
+
+> `jle` is the same as `jng` because jump less than or equal to exactly means jump if not greater than.  so many of the jump instructions have multiple ways to put.
+
+
+**Important note regarding the difference between less than and below!**
+
+`JBE` ==> jump below or equal to.  Less than has to do with signed numbers, below has to do with unsigned numbers.
+
+compiler has to know that -1 is not equal to 1 for example. FFFFF is -1 and 1 is 1 . in chart, this is confusing for unsigned numbers. so to make things easier, we use below, since FFFFFF is below 1.
+
+### For Loop in X86 ASM
+
+here is the C code:
+
+```c
+//Simple loop with single variable
+#include <stdio.h>
+
+int main(){
+   int i;
+   for(i = 0; i < 10; i++){
+      printf("i = %d\n", i);
+   }
+}
+```
