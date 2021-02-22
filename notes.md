@@ -892,3 +892,125 @@ int main(){
    }
 }
 ```
+
+now lets deconstruct this code in the 32 bit asm
+
+```asm
+     2: #include <stdio.h>
+     3: 
+     4: int main(){
+00951010  push        ebp  
+00951011  mov         ebp,esp  
+00951013  push        ecx  
+     5:    int i;
+     6:    for(i = 0; i < 10; i++){
+00951014  mov         dword ptr [ebp-4],0  
+0095101B  jmp         00951026  
+0095101D  mov         eax,dword ptr [ebp-4]  
+00951020  add         eax,1  
+00951023  mov         dword ptr [ebp-4],eax  
+00951026  cmp         dword ptr [ebp-4],0Ah  
+0095102A  jge         00951040  
+     7:       printf("i = %d\n", i);
+0095102C  mov         ecx,dword ptr [ebp-4]  
+0095102F  push        ecx  
+00951030  push        955000h  
+00951035  call        dword ptr ds:[00956238h]  
+0095103B  add         esp,8  
+     8:    }
+0095103E  jmp         0095101D  
+     9: }
+00951040  xor         eax,eax  
+00951042  mov         esp,ebp  
+00951044  pop         ebp  
+00951045  ret  
+```
+
+veeery neat and beautiful!
+
+Step 1 )
+
+
+```
+00951010  push        ebp  
+00951011  mov         ebp,esp  
+00951013  push   	  ecx
+
+```
+
+
+In order to initialize the stackframe, pushed base pointer.
+then created the top of the stack with esp
+then pushed `ecx` in order to open up space for `i`
+
+
+Step 2)
+
+```
+00951014  mov         dword ptr [ebp-4],0  
+0095101B  jmp         00951026  
+0095101D  mov         eax,dword ptr [ebp-4]  
+00951020  add         eax,1  
+00951023  mov         dword ptr [ebp-4],eax  
+00951026  cmp         dword ptr [ebp-4],0Ah  
+0095102A  jge         00951040  
+```
+
+what is [ebp-4]? it is ecx right? s adding 0 to ecx to realize `i=0`.
+then jumping to address `00951026` which is `cmp         dword ptr [ebp-4],0Ah`.
+
+this cmp comparison, compares the dword pointer [ebp-4] with 0Ah. 0A is 10 in hexadecimal. so comparing the current value of ecx to 10. 
+
+since it is not great or equal to 10, we come to the point `00951020  add         eax,1 ` and incrementing i by 1. then pushing eax (now 1) to ecx(ebp-4) and repeating the same steps.
+
+
+step 3)
+
+
+```
+00951040  xor         eax,eax  
+00951042  mov         esp,ebp  
+00951044  pop         ebp  
+00951045  ret  
+
+```
+
+once we have the equality, there comes `00951040  xor         eax,eax `
+
+as we know, xor a , a is the syntax of zeroing the stack instead of moving zero to that place.
+then regular esp ebp and popping ebp and exiting the function.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
