@@ -165,6 +165,29 @@ like CMP, sets the flags and does not save the results
 `OR`==> destination operand can be r/m32 or register. source operand can be r/m32 or register or immediate!
 
 
+`XOR` ==> A xor B = If A , then A ; else then B.
+
+there is a trick with XOR, when we xor something with itself, the result will always be 0. so ZF will be set.  `xor eax eax` sets the Zero Flag in that sense
+
+thus, it is commonly used to zero a register by XORing it with itself because it is faster than `mov`.
+
+`NOT` ==> single source/destination operand can be r/m32. One's complement negation.  
+
+`not al` or `not [al+bl]`. 
+
+example : 
+
+```
+NOT 0x00110011b(al-0x33)
+result 0x11001100b((al-0xCC))
+
+
+```
+
+
+
+
+
 
 ## THE STACK
 
@@ -843,8 +866,4 @@ in our example:
 
 this line jumps to thje end where stackframe is destroyed and functrion is terminated.
 
-
-
-https://www.youtube.com/watch?v=zUNu0glHMwI&list=PL038BE01D3BAEFDB0&index=4
-
-55:46
+> `je` is the same as `jz`  because zero flag is still essentially an equality check. in assembly code, je and jz does exactly the same thing.
