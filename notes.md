@@ -183,6 +183,25 @@ result 0x11001100b((al-0xCC))
 
 
 ```
+`SHL` ==> Shift Logical Left. Can actually be used with the C and C++ << operator.
+
+first operand(source and destination) operand is an r/m32 
+
+second operand is either a cl(lowest byte of ecx) or or a 1 byte immediate(hardcoded).
+
+the 2nd operand is the number of places to shift
+
+
+> it multiplies the register by 2 for each placeteh value is shifted. More efficient than a multiply insturction.
+
+bits shifted off to the left hand side are `shifted into` (set) the carry flag.(CF)
+
+
+
+
+
+
+
 
 
 
@@ -977,8 +996,118 @@ step 3)
 
 once we have the equality, there comes `00951040  xor         eax,eax `
 
-as we know, xor a , a is the syntax of zeroing the stack instead of moving zero to that place.
+as we know, xor a , a is the syntax of zeroing the register instead of moving zero to that place.
 then regular esp ebp and popping ebp and exiting the function.
+
+
+`0095103B  add         esp,8  ` and here, esp + 8 means clearing the stack. but why 8 ?
+
+4 is for i
+
+4 is for printf function.
+
+
+nice to notice:
+
+```
+0095101D  mov         eax,dword ptr [ebp-4]  
+00951020  add         eax,1  
+00951023  mov         dword ptr [ebp-4],eax  
+```
+
+this part corresponds to `i++`
+
+take i, add to eax,
+
+add 1 to eax,
+
+take eax and put it into i. :)
+
+
+
+### Working with Multiply / Divide (shift left/ right)
+
+to Demonstrate the multiplication/ division operations using `shift`, we will be using the following C code:
+
+```c
+//Multiply and divide transformations
+//New instructions: 
+//shl - Shift Left, shr - Shift Right
+
+int main(){
+	unsigned int a, b, c;
+	a = 0x40;
+	b = a * 8;
+	c = b / 32;
+	return c;
+}
+```
+
+And this is the corresponding resolution with assembly:
+
+```asm
+     5: int main(){
+01001010  push        ebp  
+01001011  mov         ebp,esp  
+01001013  sub         esp,0Ch  
+     6: 	unsigned int a, b, c;
+     7: 	a = 0x40;
+01001016  mov         dword ptr [ebp-4],40h  
+     8: 	b = a * 8;
+0100101D  mov         eax,dword ptr [ebp-4]  
+01001020  shl         eax,3  
+01001023  mov         dword ptr [ebp-8],eax  
+     9: 	c = b / 32;
+01001026  mov         ecx,dword ptr [ebp-8]  
+01001029  shr         ecx,5  
+0100102C  mov         dword ptr [ebp-0Ch],ecx  
+    10: 	return c;
+0100102F  mov         eax,dword ptr [ebp-0Ch]  
+    11: }
+01001032  mov         esp,ebp  
+01001034  pop         ebp  
+01001035  ret  
+```
+
+as can be seen, there are shift right and shift left mnemonics. These correspond to the mult/div operations because there is no mult/ div operations in assembly like there is add/sub. but how do they work?
+
+
+SHL, the fist instruction is the source and destination. the second operand is the number of the multiplication you want source to be multiplied by and you take it and re-assign it onto the first parameter which is the destination.
+
+Do not forget that each time there is a shift iteration, it multiplies by two.
+
+`b = a * 8;` corresponds to the asm code of `01001020  shl         eax,3 `
+
+
+shift left eax, argument is 3 so 2**3 =8. means. eax = eax * 8.
+
+one bit movement is multiplication by two.
+
+why? because in binary notation, each time you step to another bit, it is 1 level up of base of two.
+
+
+010100000   
+
+(2**0 * 0) + (2**1 *1) + (2**2 * 0 )  ikiler basamagi mantigi. 
+ 
+each bit to the left is multipkucation of base 2 in binary.
+
+When there is a shift left, last bit of the binary value changes to 0.
+
+like from `0101001` to `1010010`, shifted 1 bit to left for multiplication. the last bit is now zero, yea? in order cpu not to raise 0 flag, this SHL sets carry flag(CF).
+
+Its like I have zeroes all over but the real value is not 0.
+
+sometimes we have 8 bit of `10000000`. when shifted it becomes `1|00000000` 1 is out of the bound of 8 bits. Machine should not read it as  value `0` CF helps machine to say that 1 is outbound but valid so number is not 0.
+
+When all things are inbound, CF is set to 0; when after shifting there is an outbound, then CF is set to 1.
+
+
+
+
+
+
+
 
 
 

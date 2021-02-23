@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>notes.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="intel-x86-processors">Intel X86 Processors</h1>
+<blockquote>
+<p>only 14 assembkly instructions make up to 90 percent of the code!</p>
+</blockquote>
+<p>in intel terminology : a byte is a char(8) , a word is a short(16), int/long is double word(32), double long(64)</p>
+<p><img src="img/refresher.png" alt="refresher"></p>
+<p>Intel is little endian. 0x12345678, least significant bit is registered first, then more significant and more significant.</p>
+<p><img src="img/endian.png" alt="big/smallendian"></p>
+<p>Endians are only meaningful in byte level not in bit level!</p>
+<p>Register Conventions!</p>
+<p><code>EAX</code> ==&gt; stores function return value
+<code>EBX</code> ==&gt; Base pointer to the data section
+<code>ECX</code>==&gt;counter for string and loop ops
+<code>EDX</code> ==&gt; I/O pointer
+<code>ESI</code>==&gt;source pointer for string operations
+<code>EDI</code>==&gt;Destination pointer for string operations
+<code>ESP</code>==&gt;stack pointer
+<code>EBP</code>==&gt;Stack frame base pointer
+<code>EIP</code>==&gt;pointer to next instruction to execute(instruction pointer)</p>
+<p>There are also other type of registers.</p>
+<p><code>EAX, EDX , ECX</code> == &gt; Caller-save registers</p>
+<p>I am a function and I will call another function. And when I call I am sure I am going to destroy the current regusters(eax edx ecx)
+so we save the copy of the registers before calling the function so we do not lose the register</p>
+<p><code>EBP, EBX, ESI, EDI</code> ==&gt; Callee-save registers</p>
+<p>If I call a functiion, it wont change and modify the info in the register of ebp, ebx etc.</p>
+<p>this <code>E</code> at the head of registers mean Extended. Since these are written originally for 16 bit , AX became Extended AX with 32 bits. etc.</p>
+<p><code>EFLAGS</code></p>
+<p>EFLAGS register holds many single bit flags. Will only ask you to remember the following for now :</p>
+<p>Zero Flag(ZF)- Set if the resuklt of some instruction is zer, cleared otherwise
+Sign Flah(SF) - Set equal to the most significant bit of the result.</p>
+<h2 id="insturctions">INSTURCTIONs</h2>
+<p><code>NOP</code> No Operation. No registers no values nothing.  Just there to pad bytes or delay time.  Bad guys use it to make simple exploits more reliable. But thats another class.</p>
+<p>NOP actually takes a register and re-registers it on itself <img class="emoji" alt="smiley" src="data:image/png;base64,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" /></p>
+<p><code>PUSH</code> ==&gt; push word, double word ort quadword onto the STACK.  can either be emmediuate(a numeric constant) of the value in a register.</p>
+<p>fror our purposes, it will; always be a DWORD(for this course)
+the push instruction aautomatically decrements the stack pointter, esp, by 4. Why decrements? bcs its stack, its FILO.</p>
+<p><code>POP</code>  ==&gt; Pop a value from the Stack</p>
+<p>take a Dword off the stack, put it ina a register and increment esp by 4 ( reverse of Push)</p>
+<p><code>CALL</code> ==&gt; Call's job is to transfer control to a different function in a way that control can later be resumed where it left off.</p>
+<p>First it pushes the address of the next instruction onto the stack.  for use by RET(return from procedure) for when the procedure is done.</p>
+<p>Because idea behind a function is , do this and I will keep executing from the next line. So call also pushes the address of the next instruction set, so that once the called function is completed, the program keeps continuing from where it left off. Its a reminder to where to return to after executing the function.</p>
+<p>Then it changes eip to the address given in the instruction.</p>
+<p>DEstionation address can be specified in a multiple ways.</p>
+<ul>
+<li>
+<p>Absolute address  ==&gt; address 0x0030434</p>
+</li>
+<li>
+<p>Relative address(relative the the end of the instruction) ==&gt; some adress that hex 50 bytes ta ta ta.</p>
+</li>
+</ul>
+<p><code>RET</code>==&gt; Return from Procedure.</p>
+<p>Two forms :</p>
+<ol>
+<li>pop the top of the stack into the eip</li>
+</ol>
+<p>in this form, the instructuon ius just written as ret.</p>
+<p>typically used by cdecl functiuons</p>
+<ol start="2">
+<li>pop the top of the stacj into eip and add a constatn number of bytes to esp.</li>
+</ol>
+<p>in this form , the instruction is written as ret 0x8 of 0x20 etc. typically used bty stdcall fucntions</p>
+<p><code>MOV</code> ==&gt; Move.</p>
+<p>Can move:</p>
+<p>register to register</p>
+<p>memory to register, register to memory, immediate to reguster immediate to memory.</p>
+<p>immediate is hardcoded value.</p>
+<blockquote>
+<p>NEVER MEMORY TO MEMORY</p>
+</blockquote>
+<blockquote>
+<p>Memory addresses are given in r/m32 from.</p>
+</blockquote>
+<p><code>ADD</code> ==&gt; a = a+ b    for example add eax,ebx  means  eax = eax + ebx.  so it summs them and writes on what is on the left side</p>
+<p><code>SUB</code> ==&gt; subtraction. sub eax, [ebx*2]</p>
+<p><code>LEA</code> ==&gt; Load Effective Address.  ==&gt; frequently used with pointer arithmetic sometimes for just arithmetic in general. uses the r/m32 form but <strong>is the exception to the rule</strong></p>
+<p>Lea makes the calcualtion and appoints to the destination without disturbing the memory. Does the calc on the spot.</p>
+<p>that the [] syntax means dereference(&quot;value at&quot;)</p>
+<p>example: ebx = 0X2, edx =0x1000      --- lea eax,[edx+ebx*2]   <strong>eax = 0X1004, not the value at 0x1004!!</strong></p>
+<p><code>JMP</code> ==&gt; Jump. Changes the eip unconditionally of the given address. Main forms of the address.</p>
+<p>short relative : 1 byte displacement from the end of the instruction.</p>
+<p><code>01151015  jmp        1155000h</code> doesnt have the number <code>1155000h</code> anywhere in it, it is really <code>jmp 0x0E</code> btyes forward.</p>
+<p>near relative: 4 bytes displacement from the curent eip</p>
+<p>absolute: hardcoded address in instruction. like <code>01151013  jmp         01151023 </code></p>
+<p>absolute indirect : indirect address calculated with r/m32</p>
+<p><code>jmp -2</code> is infinite loop for short relative jmp <img class="emoji" alt="smiley" src="data:image/png;base64,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" /></p>
+<p>Conditional Jumps: <code>je, jge, jne, jle</code></p>
+<p><code>JCC</code> ==&gt; Jump if Condition is met.</p>
+<p><code>JNE</code> == <code>JNZ</code> jump if not equal means jump if not zero. What does it mean ? jne a b for example. the operation is a-b. so flag is either 0 or &lt;0 or 0&gt;</p>
+<p>so 0 means equal. if not equal, its not zero. So it makes zero flag check</p>
+<p><code>TEST</code> ==&gt; computes the bit-wise logical AND of first operant(source 1 operand) and teh second operand(source 2 operand) and sets the SF, ZFand PF staus flags accordingly.</p>
+<p>like CMP, sets the flags and does not save the results</p>
+<p><code>AND</code> ==&gt; destination operand can be r/m32 or register. source operand can be r/m32 or register or immediate!</p>
+<p><code>and al, bl</code></p>
+<p><code>and eax, 0x42</code></p>
+<p><code>OR</code>==&gt; destination operand can be r/m32 or register. source operand can be r/m32 or register or immediate!</p>
+<p><code>XOR</code> ==&gt; A xor B = If A , then A ; else then B.</p>
+<p>there is a trick with XOR, when we xor something with itself, the result will always be 0. so ZF will be set.  <code>xor eax eax</code> sets the Zero Flag in that sense</p>
+<p>thus, it is commonly used to zero a register by XORing it with itself because it is faster than <code>mov</code>.</p>
+<p><code>NOT</code> ==&gt; single source/destination operand can be r/m32. One's complement negation.</p>
+<p><code>not al</code> or <code>not [al+bl]</code>.</p>
+<p>example :</p>
+<pre class="hljs"><code><div>NOT 0x00110011b(al-0x33)
+result 0x11001100b((al-0xCC))
+
+
+</div></code></pre>
+<h2 id="the-stack">THE STACK</h2>
+<p>stack is the conceptiual area of main memory which is designated by OS when program is started. Stack is LIFO/FILO data structure where data is pushed on to top of the stack and popped off the top</p>
+<p>Stack grows over lower memory addresses. Adding something to the stack means the top of the stack is now at a lower memory address.</p>
+<p>ESP points to the top the stack. The lowest address which is being used(since it is LIFO)</p>
+<p>Stack keeps track of which functions were called before the current one. It holds LOCAL VARIABLES and is used to pass arguments to the next function to be called</p>
+<p>Register in time 1 :</p>
+<p>eax : 0x00000003
+esp : 0x0012FF8C</p>
+<p>So when we call lets say , <code>posh eax</code>, we expect the eax to be written 4 bytes after(decrement) the last esp register in the stack.</p>
+<p>Register after push eax:</p>
+<p>eax: 0x00000003
+esp:0x0012FF88    ==&gt; here, we jumped 4 bytes from FF8C to FF88. (where FF8C&gt;FF88)</p>
+<p><img src="img/push eax.png" alt="push eax"></p>
+<p>to reverse it , we use <code>POP</code></p>
+<p>in order to reverse the action above, we <code>pop eax</code>and voila, esp jumped by 4 bytes up ( incremented) and top shelf of the stack is emptied.</p>
+<p><img src="img/pop eax.png" alt="pop eax"></p>
+<blockquote>
+<p>Everything numerically under esp is considered to be undefined. Although there is a data over there, it is not of our business.</p>
+</blockquote>
+<blockquote>
+<p>once we call pop eax, the the value at the top of the stack (eax) is taken to the register and that memory spot is not undefined.</p>
+</blockquote>
+<h3 id="calling-convention">Calling Convention</h3>
+<p>calling convention is about how to pass parameters and how to get parameters back.</p>
+<p>how code calls a subroutine is compiler-dependent and configurable. But there are few conventions. We will deal with cdecl and stdcall conventions.</p>
+<h3 id="cdecl">cdecl</h3>
+<p>C Declaration. The most common calling convention. Function parameters pushed (using push)  onto stack RIGHT TO LEFT. Saves the old stace frame pointer and sets up a new stack frame.</p>
+<p>eax or edx:eax returns the result for primitive data types.</p>
+<p>Most significant 32 bits go into edx, least significant bits go into eax</p>
+<p>Also values are always big endian in registers, in memory they are little endian.</p>
+<p>so for example :  <code>printf(%d\n, myVariable)</code>  ===&gt; from right to left: push my variable to the stack then ppusth the pointer and trhen call the function.</p>
+<p>function here, saves the old frame pointer, saves the address to the stack.</p>
+<p><code>Caller</code> is responsible for cleaning up the stack.  ==&gt;</p>
+<p>so we have 2 parameters and 1 function call. push push and call. so whatever regiester is calling the function is also responsible to clean up the stack</p>
+<h3 id="stdcall">stdcall</h3>
+<p>Microsoft C++ code e.g. Win32API
+parameters pushed onto stack right to left
+saves the old stack frame pointer and sets up a new stack frame pointer</p>
+<p>HERE, CALLEE is responsibnle for cleaning ip any stack parameters it takes not the CALLER!</p>
+<h2 id="general-stack-frame-operation">General Stack Frame Operation</h2>
+<p>We are going to assume that the main() is the very first function being executed in a program. This is what its stack looks like to start witrh.</p>
+<p><img src="img/stackframeop.png" alt="stackframeop"></p>
+<p>Low addresses at the bottom, high addresses at the top.</p>
+<p>The more I add to the stack, the more I expect it to grow to the bottom.</p>
+<p>So first thing main does is to preserve space on the stack for the local variables. When main() decides to call a subroutine, main() becomes the caller. We will assume main() has some registers it would like to remain the same, so it will save them. We will also assume that the callee function stakes some input args.</p>
+<p>so , local variables, caller-save registers, and Args to pass to callee are in main() stack frame at the bottom of the stack.</p>
+<p>so right to left, local variables, caller-save registers, args to pass to callee and then function call.
+git
+when we execute the call instruction, the return address(RET) gerts save onto the stackm and becuse the next instruction after the call will be the beginning of the called function, wer consiter the frame to have changed to the callee.</p>
+<p><img src="img/stackframe.png" alt="stackframe"></p>
+<p>next, when subroutine starts, the frame pointer(ebp) still points to the main()'s frame. so tthe first thing it does is to save the old frame pointer on the starck and set the new value to point to its own frame.</p>
+<p>so at the main() fnction, ebp is pointing at the top of the frame. when a subroutine is called, it will save this adress to stack , take the ebp and contibnue its function, once the function is finished, it will restore the value of ebp so that the next subroutines can take up to from original ebp register.</p>
+<blockquote>
+<p>STACK FRAMES AR A LINKED LIST!</p>
+</blockquote>
+<pre><code>The ebp in the current frame points at the saved ebp of the previous frame
+</code></pre>
+<p><img src="img/example1.png" alt="exapmpe1"></p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sub</span><span class="hljs-params">()</span></span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0xbeef</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
+    sub();
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0xf00fd</span>;
+}
+</div></code></pre>
+<pre class="hljs"><code><div>NOTE :  ON INTEL REGISTERS AND CALLS, DESTINATION IS ON THE LEFT AND SOURCE IS ON THE RIGHT
+
+SO
+
+MOV EBP,ESP MEANS
+
+Move esp TO EBP!!!
+
+IN AT&amp;T syntax, this is the opposite tho.
+</div></code></pre>
+<pre class="hljs"><code><div>sub:
+
+00401000 push ebp
+00401001 mov  ebp,esp
+00401003 mov  eax,0BEEFh
+00401008 pop  ebp
+00401009 ret
+
+main:
+00401010 push ebp
+00401011 mov ebp,esp
+00401013 call sub(401000h)
+00401018 mov eax,0F00Dh
+0040101D pop ebp
+0040101E ret
+</div></code></pre>
+<p>note : push ebp    mov ebp,esp  codes are generated by compiler automaticaly</p>
+<pre class="hljs"><code><div>main:
+00401010 push ebp
+</div></code></pre>
+<p>when code started to executing, there was some value in ebp. so initially, main pusheh ebp(base pointer).
+so when we push ebp, since esp always points to the top of the stack, we also see that esp is also changed.</p>
+<p>stack is decremented by 4 bytes with this push since it pushes stack to down(LIFO)</p>
+<p><code>mov ebp,esp</code>  means take whatever value in the esp and put it onto ebp. because intel x86 syntax is <code>instruction destination,source</code></p>
+<p>so now ebp and esp are the same. so whatever is at teh address of ebp and low is the new stack frame.</p>
+<p><code>00401013 call sub(401000h)</code> in the main function is very self-explanatory. call the function called sub at the address of 401000h which is the beginning of the address of sub.</p>
+<p>so what is at the stack now ?</p>
+<pre class="hljs"><code><div>00401013 call sub(401000h)
+00401018 mov eax,0F00Dh
+</div></code></pre>
+<p>subroutine(function sub) needs to register the address of the next register so that after the execution of the subroutine, main function picks up from where it left off. hence, the address of mov eax,0F00Dh is registrered to the stack.</p>
+<p>now the stack is hosting 00401018 right after ebp.</p>
+<p>next step is to calling sub routine. when subroutine is called, it will save the ebp to the register (push ebp) this ebp is pointing at the main function normally. then it will move esp to ebp like main function(mov ebp,esp). now ebp and esp are pointing at the same place. why <code>mov ebp,esp</code> is important? <strong>by setting esp to ebp, sub is creating its own stack</strong>!!
+next step, sub can start functioning, which is writing 0X0BEEF to eax.</p>
+<p>why? because eax holds the return values and the sub() function was only returning 0xbeef;. thus it makes sense!</p>
+<p>thus , in the stack, eax is changed to 0x0000BEEF address since this is our return value.</p>
+<p>now sub() function is executed and we do not need the base pointer anymore. next step is pop ebp since this is the end of the stack.</p>
+<p>end we will exit the sub() function with <code>ret</code>.</p>
+<p>what <code>ret</code>does is that whatever is on the top iof the stack, go ahead and take it from there and I will put there the insturction pointer and so this will be our next destination.</p>
+<p>remember the code :</p>
+<pre class="hljs"><code><div>sub:
+
+00401000 push ebp
+00401001 mov  ebp,esp
+00401003 mov  eax,0BEEFh
+00401008 pop  ebp
+00401009 ret
+
+main:
+00401010 push ebp
+00401011 mov ebp,esp
+00401013 call sub(401000h)
+00401018 mov eax,0F00Dh
+0040101D pop ebp
+0040101E ret
+</div></code></pre>
+<p>so when <code>ret</code>  (0x000401009) is called, the top of the stack will have the value of will be replaced to what?</p>
+<p>it will be replaced with <code>0x000401018</code> since this is the first address after the sub() function call. thus main() function will keep goint from here. so next step is <code>00401018 mov eax,0F00Dh</code></p>
+<p>whici moves the value 0x00F00D to the eax because is the return value. if we did not put this register, the eax would be stil under the effect of sub() function so would keep pointing at 0x00BEEF. but main() wants a return of 0xFOOd so we immediately overwrite it.</p>
+<p>next, we tear down the stack with <code>pop ebp</code> and returning to the function.</p>
+<p>with pop ebp and ret, we cleared the last 2 remaining registers of stack. now stack is all undefined.</p>
+<p>Some notes:</p>
+<p>since sub() is a deadcode , meaning its return value 0xFOOD, is not used for anything, compiler with optimization option on would delete sub() function.</p>
+<p>because there are not input parameters to sub(), there is no diff whether we compile cdecl or stdcall calling convention.</p>
+<p>in the debugger when we jump to the assembly debugger here is the C code and the corresponding assembly code :</p>
+<pre class="hljs"><code><div>int main(){
+011E1010  push        ebp  
+011E1011  mov         ebp,esp  
+	sub();
+011E1013  call        sub (11E1000h)  
+	return 0xf00d;
+011E1018  mov         eax,0F00Dh  
+}
+011E101D  pop         ebp  
+011E101E  ret  
+
+</div></code></pre>
+<p>Lets do another example.</p>
+<p><img src="img/example2.png" alt="example2"></p>
+<h2 id="rm32-addressing-forms">r/m32 Addressing Forms</h2>
+<p>Anywhere you see an r/m32 it means it could be taking a value either from a register of a memory address. (r/m == register/memory)
+in <strong>Intel Syntax</strong>, most iof the tuimne square brackets([]) means to treat the value within as a memory address and ffetch the value at the address(like dereferencing pointer)</p>
+<ul>
+<li>mov eax,ebx</li>
+<li>mov eax, [ebx]</li>
+<li>mov eax, [ebx+ecx*X]  =&gt; X can be 1,2,4 or 8.</li>
+</ul>
+<p>so for example here, it means,  take the ecx(lets say 0x00344F) and multiply it with X, go to the address in this multiplication, add it to ebx, and write the cumulation to eax.</p>
+<p>the most complicated form is : [base + index * scale + disp]</p>
+<p>base +(index * scale ) + displacement.</p>
+<p>mov eax ,[ebx+ecx*X+Y] where Y is one byte(0-255) or 4 bytes(0-2˜32-1)</p>
+<p>Scenario :  data type we have is an array. Its consequential data type. So ebx points to the base of the Array, beginning point of the array. Ecx is the index number(so A[0]) in this case what should be the X? it could be a 4 byte element, 2 bytes elements. so to jump to correct next position, X is the length of the element.</p>
+<p>base + 0x4</p>
+<p>base + 1x4</p>
+<p>base + 2x4</p>
+<p>so 4 is the elements length. hence, ecx * X is jumping to the next element in each iteration.</p>
+<p>so what is displacement then ? Why is is used?</p>
+<p>When the given array is <code>multidimensional</code> array. so to give an idea:</p>
+<p>Scenario :  in the C code I have 2 arrays of 10 bytes. I want to iterate over each array. using <code>base +(index * scale )</code>, I started at the base0 of the array1 and went through all the elements. Now I want to jump to the second array right?  So in order to move the ebx to the base of the second array, I use displacemenet constant.</p>
+<p>[0,1,2,3,4,5,6,7,8,9] [B0,B1,B2,B3,B4,B5,B6,B7,B8,B9]</p>
+<p>when ebp is pointing to <code>0</code>, <code>base +(index * scale )</code> will iterate through the array. now I eax is pointing to <code>9</code> but I want to jump to <code>B0</code>. Addinng the <code>displacement</code> constant to ebp will help pointer to jump to <code>B0</code></p>
+<p>what does this mean ? ==&gt; <code>- mov eax, [ebx]</code>  go to ebx, read what is in that memory address, read 4 bytes from memory and write it on eax.</p>
+<blockquote>
+<p>Note that brackets can be on one side or on the other side but never on both sides because there is not memory to memory operation!</p>
+</blockquote>
+<p>just before exiting a function, generally the main function, we generally see the register mneomic <code>mov ebp,esp</code> meaning level the base and the top pointers of the stack.</p>
+<p>In practice this means destroy all the local variables in the stack. We are closing down the shop, nothing should be left in the stack.</p>
+<p>Yani we are carrying the bottom level pointer(ebp) to the top level (esp) and thus whatever downwards of the esp is garbage, undefined. No more in the stack.</p>
+<p>The next move, of course, is to destroy the pointers from the stack which is <code>pop ebp</code> and finally <code>retn</code>.</p>
+<p><code>retn == ret</code></p>
+<blockquote>
+<p><strong>NOTE</strong>: In VM Visual C++ Express, standard C libraries are not auto-recognized and yields debug error. In order to fix it, Under the project properties we need to add the address manually. In my case this was <code>C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include</code>.</p>
+</blockquote>
+<h3 id="example2c">Example2.c</h3>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sub</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y)</span></span>{
+	<span class="hljs-keyword">return</span> <span class="hljs-number">2</span>*x+y;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> ** argv)</span></span>{
+	<span class="hljs-keyword">int</span> a;
+	a = atoi(argv[<span class="hljs-number">1</span>]);
+	<span class="hljs-keyword">return</span> sub(argc,a);
+}
+</div></code></pre>
+<p>Takes arguments, since arguments (argv) are string, it converts it to int using atoi. then uses this variable in the sub() function, makes the arithmetic.</p>
+<p>then returns the return of sub function. So main returns the return of sub.</p>
+<p>here is the disassembled version of the code alongside the C code :</p>
+<pre class="hljs"><code><div>
+#include &lt;stdlib.h&gt;
+int sub(int x, int y){
+009E1020  push        ebp  
+009E1021  mov         ebp,esp  
+	return 2*x+y;
+009E1023  mov         eax,dword ptr [ebp+8]  
+009E1026  mov         ecx,dword ptr [ebp+0Ch]  
+009E1029  lea         eax,[ecx+eax*2]  
+}
+009E102C  pop         ebp  
+009E102D  ret  
+--- No source file -------------------------------------------------------------
+009E102E  int         3  
+009E102F  int         3  
+--- c:\users\mehmetyavuzyagis\desktop\intotoasm\example2\example2.c ------------
+
+int main(int argc, char ** argv){
+009E1030  push        ebp  
+009E1031  mov         ebp,esp  
+009E1033  push        ecx  
+	int a;
+	a = atoi(argv[1]);
+009E1034  mov         eax,dword ptr [ebp+0Ch]  
+009E1037  mov         ecx,dword ptr [eax+4]  
+009E103A  push        ecx  
+009E103B  call        dword ptr ds:[009E6238h]  
+009E1041  add         esp,4  
+009E1044  mov         dword ptr [ebp-4],eax  
+	return sub(argc,a);
+009E1047  mov         edx,dword ptr [ebp-4]  
+009E104A  push        edx  
+009E104B  mov         eax,dword ptr [ebp+8]  
+009E104E  push        eax  
+009E104F  call        009E1005  
+009E1054  add         esp,8  
+}
+009E1057  mov         esp,ebp  
+009E1059  pop         ebp  
+009E105A  ret  
+</div></code></pre>
+<blockquote>
+<p>NOTE  if you see <code>ebp + something</code>  this something is a passed argument that is trying to reach to memory</p>
+</blockquote>
+<blockquote>
+<p>NOTE  if you see <code>ebp - something</code>  this passing a local variable.</p>
+</blockquote>
+<p><code>011A1033  push        ecx  </code>  actually smart way to allocate a place for <code>int a;</code> 4 byte integer allocation. made by the compiler automatically. Thus, pushing ecx, 4 bytes, between ebp and esp , not stack has one 4 byte variable <code>a</code>.</p>
+<p>Also checking the stack currently we can see that there is a 4 bytes difference between them:</p>
+<p><img src="img/registers.png" alt="4bytes"></p>
+<p><code>009E1034  mov         eax,dword ptr [ebp+0Ch]  </code>  here, [ebp +0Ch] is the argv[1] spefified in  r/m32 Addressing Forms. So it is goint to ebp, skipping the argv[o] which is the name of the program(example2) and reaching to argv[1]</p>
+<p><code>01001047  mov         edx,dword ptr [ebp-4]   </code>  here, [ebp-4] is the first parameter we want in the subroutine and</p>
+<p>we save the value to the edx and next, we push the <code>edx</code> to the stack.</p>
+<p><code>0100104B  mov         eax,dword ptr [ebp+8]</code> here [ebp+8] is the second parameter we want in the subroutine.</p>
+<p>we save the value to the <code>eax</code> and we push the  velue <code>eax</code> to the stack.</p>
+<p>Now both of the values of the parameters are defined and in the stack.</p>
+<p>next <code>0100104F  call        01001005  </code> this calls the subroutine sub() at the address 0x01001005. that is the initial address of the sub()</p>
+<p><strong>&gt; NOTE  if you see <code>ebp + something</code>  this something is a passed argument that is trying to reach to memory</strong></p>
+<p><strong>&gt; NOTE  if you see <code>ebp - something</code>  this passing a local variable.</strong></p>
+<p><code>01001054  add         esp,8  </code> I had passed two parameters above, now the function is executed so I need to clean them up. for 2 integers from 4 bytes, I add 8 to esp.</p>
+<p>then moving esp to ebp to destroy the local variables in the stack and popping the ebp and retting. exiting the program</p>
+<p>Until now we used the following instructions:</p>
+<pre class="hljs"><code><div>NOP ==&gt; copies eax to eax. so doing nothing
+PUSH ==&gt; pushes from register to memory
+POP  ==&gt; pops from memory to register
+CALL ==&gt; pushes the address of the next instruction to the stack, changes eip to the next instruction.
+RET-RETN
+MOV ==&gt; register to register, register to memory , immediate(hardcoded) NEVER Memory to Memory!
+LEA ==&gt; instead of using r/m32 form, It makes its operations right on the spot
+ADD ==&gt; takes second parameter, adds to the first parameter and saves the result to the first parameter.
+SUB
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">"Hello World!\n"</span>);
+	<span class="hljs-keyword">return</span> <span class="hljs-number">0x1234</span>;
+}
+</div></code></pre>
+<p>This is a basic C code for hello world.</p>
+<p>the assembly version is basic:</p>
+<pre class="hljs"><code><div>push ebp
+mov ebp, esp
+push offsetaHelloWorld;&quot;Hello world\n&quot;
+call ds:__imp__printf
+add esp,4
+mov eax,1234h
+pop ebp
+retn
+</div></code></pre>
+<pre class="hljs"><code><div>push ebp
+mov ebp, esp
+</div></code></pre>
+<p>creating the stack</p>
+<pre class="hljs"><code><div>push offsetaHelloWorld;&quot;Hello world\n&quot;
+call ds:__imp__printf
+</div></code></pre>
+<p>pushing the hello World string from the pointer into the stack (from Right to left remember?)
+calling the printf function.</p>
+<p><code>add esp,4</code></p>
+<p>adding 4 to esp to destroy the data in the stack.</p>
+<p><code>mov eax,1234h</code></p>
+<p>per code, returing 0x1234 since eax holds the return values</p>
+<pre class="hljs"><code><div>pop ebp
+retn
+</div></code></pre>
+<p>popping off the ebp to clear the stackframe and exiting the function.</p>
+<pre class="hljs"><code><div>#include&lt;stdio.h&gt;
+int main(){
+01091000  push        ebp  
+01091001  mov         ebp,esp  
+	printf(&quot;Hello World!\n&quot;);
+01091003  push        offset ___globallocalestatus-10h (1093000h)  
+01091008  call        dword ptr [__imp__printf (10920A8h)]  
+0109100E  add         esp,4  
+	return 0x1234;
+01091011  mov         eax,1234h  
+}
+01091016  pop         ebp  
+01091017  ret  
+</div></code></pre>
+<p>Here is the step by step resolution.</p>
+<h2 id="control-flow-in-assembly">Control Flow in Assembly</h2>
+<p>There are 2 kinds of control flows.</p>
+<ul>
+<li>conditional : go somewhere if a condition is met. Think &quot;if&quot;s, switches, loops</li>
+<li>unconditional : go somewhere no matter what. Procedure calls, goto, exceptions, interrupts.</li>
+</ul>
+<p>some of the procedure calls manifest themselves as push/call/ret</p>
+<p>Now its time to see <code>goto</code> in assembly.</p>
+<p>here is the source code for the current example to learn GOTO</p>
+<pre class="hljs"><code><div><span class="hljs-comment">//Goto example</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
+	<span class="hljs-keyword">goto</span> mylabel;
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">"skipped\n"</span>);
+mylabel:
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">"goto ftw!\n"</span>);
+	<span class="hljs-keyword">return</span> <span class="hljs-number">0xf00d</span>;
+}
+
+</div></code></pre>
+<p>here is the step by step resolution.</p>
+<pre class="hljs"><code><div>#include &lt;stdio.h&gt;
+int main(){
+01151010  push        ebp  
+01151011  mov         ebp,esp  
+	goto mylabel;
+01151013  jmp         01151023  
+	printf(&quot;skipped\n&quot;);
+01151015  push        1155000h  
+0115101A  call        dword ptr ds:[01156238h]  
+01151020  add         esp,4  
+mylabel:
+	printf(&quot;goto ftw!\n&quot;);
+01151023  push        115500Ch  
+01151028  call        dword ptr ds:[01156238h]  
+0115102E  add         esp,4  
+	return 0xf00d;
+01151031  mov         eax,0F00Dh  
+}
+01151036  pop         ebp  
+01151037  ret 
+</div></code></pre>
+<p>so here the interesting code piece is <code>01151013  jmp         01151023 </code> part. It jumps to the given eip and code keeps executing from there on.</p>
+<p>printf(&quot;skipped\n&quot;);Keep in mind that, whatever under the GOTO was skipped due to the unconditional jump of the jmp. So we literally skipped the part <code>printf(&quot;skipped\n&quot;);</code></p>
+<p>Lets see the new C code and the resolution alongside assembly for jmp comparisons:</p>
+<p>here is the C code:</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
+	<span class="hljs-keyword">int</span> a=<span class="hljs-number">1</span>, b=<span class="hljs-number">2</span>;
+	<span class="hljs-keyword">if</span>(a == b){
+		<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+	}
+	<span class="hljs-keyword">if</span>(a &gt; b){
+		<span class="hljs-keyword">return</span> <span class="hljs-number">2</span>;
+	}
+	<span class="hljs-keyword">if</span>(a &lt; b){
+		<span class="hljs-keyword">return</span> <span class="hljs-number">3</span>;
+	}
+	<span class="hljs-keyword">return</span> <span class="hljs-number">0xdefea7</span>;
+}
+</div></code></pre>
+<pre class="hljs"><code><div>int main(){
+00831010  push        ebp  
+00831011  mov         ebp,esp  
+00831013  sub         esp,8  
+	int a=1, b=2;
+00831016  mov         dword ptr [ebp-4],1  
+0083101D  mov         dword ptr [ebp-8],2  
+	if(a == b){
+00831024  mov         eax,dword ptr [ebp-4]  
+00831027  cmp         eax,dword ptr [ebp-8]  
+0083102A  jne         00831033  
+		return 1;
+0083102C  mov         eax,1  
+00831031  jmp         00831056  
+	}
+	if(a &gt; b){
+00831033  mov         ecx,dword ptr [ebp-4]  
+00831036  cmp         ecx,dword ptr [ebp-8]  
+00831039  jle         00831042  
+		return 2;
+0083103B  mov         eax,2  
+00831040  jmp         00831056  
+	}
+	if(a &lt; b){
+00831042  mov         edx,dword ptr [ebp-4]  
+00831045  cmp         edx,dword ptr [ebp-8]  
+00831048  jge         00831051  
+		return 3;
+0083104A  mov         eax,3  
+0083104F  jmp         00831056  
+	}
+	return 0xdefea7;
+00831051  mov         eax,0DEFEA7h  
+}
+00831056  mov         esp,ebp  
+00831058  pop         ebp  
+00831059  ret  
+</div></code></pre>
+<p>Now be careful in this assembly, we have some important mnemonics: <code>cmp, jne, jle, jge</code></p>
+<p>In order to create space for two local variables, the compiler pushed the esp by 8 bytes : <code>00831013  sub         esp,8  </code></p>
+<p>after creating space in the stackframe, values 1 and 2 are assigned. :</p>
+<pre class="hljs"><code><div>00831016  mov         dword ptr [ebp-4],1  
+0083101D  mov         dword ptr [ebp-8],2  
+</div></code></pre>
+<p>ebp-4 ==1 and ebp-8 ==2</p>
+<pre class="hljs"><code><div>00831024  mov         eax,dword ptr [ebp-4]  
+00831027  cmp         eax,dword ptr [ebp-8]  
+0083102A  jne         00831033
+</div></code></pre>
+<p>it takes the dereferenced pointer value of [ebp-4] to the eax. (which is 1)</p>
+<p>then it compares the eax to dereferenced pointer value of [ebp-8] (which is 2)</p>
+<p>if not equal (jne) jumps to the given address ahead : <code>00831033</code></p>
+<h3 id="then-how-do-we-set-flags">Then How do we set flags?</h3>
+<p>before making a conditional jump, we need something to set the condition flags for me.</p>
+<p>this is typically done with CMP(compare) TEST, or some other flag-setting mneomics.</p>
+<p>so for example ZeroFlag is set is some operation is zero. In this codebase, this was the comparison of two integers by cmp.</p>
+<p>although cmp is same as sub, sub saves the result but cmp just uses it to set flags, never touches the original values.</p>
+<p>so also there should be another jump instruction after the cmp to follow if the comparison is 0.</p>
+<p>in our example:</p>
+<pre class="hljs"><code><div>	if(a == b){
+00831024  mov         eax,dword ptr [ebp-4]  
+00831027  cmp         eax,dword ptr [ebp-8]  
+0083102A  jne         00831033  
+		return 1;
+0083102C  mov         eax,1  
+00831031  jmp         00831056 
+</div></code></pre>
+<p><code>00831031  jmp         00831056 </code>  this one.</p>
+<p>this line jumps to thje end where stackframe is destroyed and functrion is terminated.</p>
+<blockquote>
+<p><code>je</code> is the same as <code>jz</code>  because zero flag is still essentially an equality check. in assembly code, je and jz does exactly the same thing.</p>
+</blockquote>
+<blockquote>
+<p><code>jle</code> is the same as <code>jng</code> because jump less than or equal to exactly means jump if not greater than.  so many of the jump instructions have multiple ways to put.</p>
+</blockquote>
+<p><strong>Important note regarding the difference between less than and below!</strong></p>
+<p><code>JBE</code> ==&gt; jump below or equal to.  Less than has to do with signed numbers, below has to do with unsigned numbers.</p>
+<p>compiler has to know that -1 is not equal to 1 for example. FFFFF is -1 and 1 is 1 . in chart, this is confusing for unsigned numbers. so to make things easier, we use below, since FFFFFF is below 1.</p>
+<h3 id="for-loop-in-x86-asm">For Loop in X86 ASM</h3>
+<p>here is the C code:</p>
+<pre class="hljs"><code><div><span class="hljs-comment">//Simple loop with single variable</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
+   <span class="hljs-keyword">int</span> i;
+   <span class="hljs-keyword">for</span>(i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++){
+      <span class="hljs-built_in">printf</span>(<span class="hljs-string">"i = %d\n"</span>, i);
+   }
+}
+</div></code></pre>
+<p>now lets deconstruct this code in the 32 bit asm</p>
+<pre class="hljs"><code><div>     2: #include &lt;stdio.h&gt;
+     3: 
+     4: int main(){
+00951010  push        ebp  
+00951011  mov         ebp,esp  
+00951013  push        ecx  
+     5:    int i;
+     6:    for(i = 0; i &lt; 10; i++){
+00951014  mov         dword ptr [ebp-4],0  
+0095101B  jmp         00951026  
+0095101D  mov         eax,dword ptr [ebp-4]  
+00951020  add         eax,1  
+00951023  mov         dword ptr [ebp-4],eax  
+00951026  cmp         dword ptr [ebp-4],0Ah  
+0095102A  jge         00951040  
+     7:       printf(&quot;i = %d\n&quot;, i);
+0095102C  mov         ecx,dword ptr [ebp-4]  
+0095102F  push        ecx  
+00951030  push        955000h  
+00951035  call        dword ptr ds:[00956238h]  
+0095103B  add         esp,8  
+     8:    }
+0095103E  jmp         0095101D  
+     9: }
+00951040  xor         eax,eax  
+00951042  mov         esp,ebp  
+00951044  pop         ebp  
+00951045  ret  
+</div></code></pre>
+<p>veeery neat and beautiful!</p>
+<p>Step 1 )</p>
+<pre class="hljs"><code><div>00951010  push        ebp  
+00951011  mov         ebp,esp  
+00951013  push   	  ecx
+
+</div></code></pre>
+<p>In order to initialize the stackframe, pushed base pointer.
+then created the top of the stack with esp
+then pushed <code>ecx</code> in order to open up space for <code>i</code></p>
+<p>Step 2)</p>
+<pre class="hljs"><code><div>00951014  mov         dword ptr [ebp-4],0  
+0095101B  jmp         00951026  
+0095101D  mov         eax,dword ptr [ebp-4]  
+00951020  add         eax,1  
+00951023  mov         dword ptr [ebp-4],eax  
+00951026  cmp         dword ptr [ebp-4],0Ah  
+0095102A  jge         00951040  
+</div></code></pre>
+<p>what is [ebp-4]? it is ecx right? s adding 0 to ecx to realize <code>i=0</code>.
+then jumping to address <code>00951026</code> which is <code>cmp         dword ptr [ebp-4],0Ah</code>.</p>
+<p>this cmp comparison, compares the dword pointer [ebp-4] with 0Ah. 0A is 10 in hexadecimal. so comparing the current value of ecx to 10.</p>
+<p>since it is not great or equal to 10, we come to the point <code>00951020  add         eax,1 </code> and incrementing i by 1. then pushing eax (now 1) to ecx(ebp-4) and repeating the same steps.</p>
+<p>step 3)</p>
+<pre class="hljs"><code><div>00951040  xor         eax,eax  
+00951042  mov         esp,ebp  
+00951044  pop         ebp  
+00951045  ret  
+
+</div></code></pre>
+<p>once we have the equality, there comes <code>00951040  xor         eax,eax </code></p>
+<p>as we know, xor a , a is the syntax of zeroing the register instead of moving zero to that place.
+then regular esp ebp and popping ebp and exiting the function.</p>
+<p><code>0095103B  add         esp,8  </code> and here, esp + 8 means clearing the stack. but why 8 ?</p>
+<p>4 is for i</p>
+<p>4 is for printf function.</p>
+<p>nice to notice:</p>
+<pre class="hljs"><code><div>0095101D  mov         eax,dword ptr [ebp-4]  
+00951020  add         eax,1  
+00951023  mov         dword ptr [ebp-4],eax  
+</div></code></pre>
+<p>this part corresponds to <code>i++</code></p>
+<p>take i, add to eax,</p>
+<p>add 1 to eax,</p>
+<p>take eax and put it into i. <img class="emoji" alt="smiley" src="data:image/png;base64,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" /></p>
+<h3 id="working-with-multiply--divide-hift-left-right">Working with Multiply / Divide (hift left/ right)</h3>
+
+</body>
+</html>
