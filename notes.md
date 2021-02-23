@@ -256,8 +256,46 @@ in 32 bit architecture, in this kind of a scenario, half of the result it writte
 if the divisor is 0, a `divide by 0 exception` is raised.
 
 
-`REP STOS`
+`REP STOS` ==> Repeat Store String
 
+One of a family of "rep" operations hich reapeat a single instruction multiple times(i.e. stos is also a standalone instruction)
+
+Rep is not a standalone instructionm its more of a prefix to stos.
+
+> all rep operations use `ecx` register as counter to determine how mant times to loop through the instruction. Each time it execures, it decrements ecx. once ecx=0, it continues to the next instruction.
+
+either moves one byte at a time or one dword at a time.
+
+either fill btye at [edi] with al or fill dword at [edi] with ax.
+
+moves teh edi register forward one byte or one dword at at time, so that the repeated store operation is `storing into consecutive locations`.
+
+thus, there are 4 pieces which must happen before the actual `rep stos` occurs
+
+1) set `edi` to start the destination
+2) (e)ax to the value to store
+3) ecx to the number of times to store
+
+
+
+
+
+
+
+
+
+
+`NEG`==> 2s Compliment negation. take a positive number make it negative for 2s.
+
+
+
+`MUL` ==> unsigned multiplication.
+
+
+`DEC` ==> Decrement a register (substract one)
+
+
+`LEAVE`==> tearing stackframe(mov esp, ebp   pop ebp  ret)
 
 
 
@@ -1340,56 +1378,94 @@ int main(){
 }
 ```
 
+what does it do is basically allocating a memory space for 40 bytes and allocating the `42` to the 39th index place of the buffer.
+
+then returning 0xb100d
+
+
+
+
+
 here is the disassembled code :
 
 
 ```asm
 int main(){
-01331010  push        ebp  
-01331011  mov         ebp,esp  
-01331013  sub         esp,30h  
-01331016  push        edi  
-01331017  lea         edi,[ebp-30h]  
-0133101A  mov         ecx,0Ch  
-0133101F  mov         eax,0CCCCCCCCh  
-01331024  rep stos    dword ptr es:[edi]  
+008E1010  push        ebp  
+008E1011  mov         ebp,esp  
+008E1013  sub         esp,30h  
+008E1016  push        edi  
+008E1017  lea         edi,[ebp-30h]  
+008E101A  mov         ecx,0Ch  
+008E101F  mov         eax,0CCCCCCCCh  
+008E1024  rep stos    dword ptr es:[edi]  
 	char buf[40];
 	buf[39] = 42;
-01331026  mov         byte ptr [ebp-5],2Ah  
+008E1026  mov         byte ptr [ebp-5],2Ah  
 	return 0xb100d;
-0133102A  mov         eax,0B100Dh  
+008E102A  mov         eax,0B100Dh  
 }
-0133102F  push        edx  
-01331030  mov         ecx,ebp  
-01331032  push        eax  
-01331033  lea         edx,ds:[01331048h]  
-01331039  call        013310B0  
-0133103E  pop         eax  
-0133103F  pop         edx  
-01331040  pop         edi  
-01331041  mov         esp,ebp  
-01331043  pop         ebp  
-01331044  ret 
+008E102F  push        edx  
+008E1030  mov         ecx,ebp  
+008E1032  push        eax  
+008E1033  lea         edx,[ (8E1048h)]  
+008E1039  call        _RTC_CheckStackVars (8E10B0h)  
+008E103E  pop         eax  
+008E103F  pop         edx  
+008E1040  pop         edi  
+008E1041  mov         esp,ebp  
+008E1043  pop         ebp  
+008E1044  ret  
 
 ```
 
 
 
+but wait. what is `01331024  rep stos    dword ptr es:[edi] ` ?
+
+
+what is rep stos here?
+
+lets remember:
+
+> all rep operations use `ecx` register as counter to determine how mant times to loop through the instruction. Each time it execures, it decrements ecx. once ecx=0, it continues to the next instruction.
+
+
+moves teh edi register forward one byte or one dword at at time, so that the repeated store operation is `storing into consecutive locations`.
+
+thus, there are 4 pieces which must happen before the actual `rep stos` occurs
+
+1) set `edi` to start the destination
+2) (e)ax to the value to store
+3) ecx to the number of times to store
+
+
+![repstos](img/repstos.png)
 
 
 
 
+```
+008E101F  mov         eax,0CCCCCCCCh  
+
+008E1039  call        _RTC_CheckStackVars (8E10B0h)  
+```
+
+These two lines are protection against buffer overflow at the end of two ends of stack. Do not get confused. These are auto-generated breakpoints to guard up.
+
+
+`008E1016  push        edi `
+
+so why we pushed edi? also we popped it later on? we will use rep mnemonics , compiler knows it, and rep always uses edi for its operations .
 
 
 
 
+we allocated 40 bytes of buffer in the C code but in assembly ,`00E6101A  mov         ecx,0Ch  ` 
 
+we moved 0c(12) to ecx, and 12x4=48 bytes of stackframe creted
 
-
-
-
-
-
+there are 4 on top 4 on bottom byte extra space created and put CCCs below and above.(`00E6101F  mov         eax,0CCCCCCCCh  `)
 
 
 
