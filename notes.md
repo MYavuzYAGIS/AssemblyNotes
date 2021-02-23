@@ -196,6 +196,19 @@ the 2nd operand is the number of places to shift
 
 bits shifted off to the left hand side are `shifted into` (set) the carry flag.(CF)
 
+`SHR` ==> Shift Logical Right
+
+Same thing with SHL, but this time each bit registers divide by power of that bit.
+
+like 
+`shr eax, 5  ==>  divide eax with 2**5(32) and write it on eax.`
+
+Still much effective than division and faster. becasue just shifting bits around.
+
+when shifting bits to right so much so that it is now outbound of 8 bits, Carry flag(CF) is set to 1 to show that it is not actually 0 but it is carried. 
+
+
+
 
 
 
@@ -1103,13 +1116,53 @@ sometimes we have 8 bit of `10000000`. when shifted it becomes `1|00000000` 1 is
 When all things are inbound, CF is set to 0; when after shifting there is an outbound, then CF is set to 1.
 
 
+What is the difference between logical and arithmetic shift?
+
+Logical shift is unsigned integers, arithmetic shift signed integers.
 
 
+SHR is the same with SHL.
+
+for example `shr eax, 5  ==>  divide eax with 2**5(32) and write it on eax.` 
+
+when shifting to right, the 8 bits can return to zero and the rightmost bit can be outbound of 8 bit limits.(it could be carried to 10th bit) in that case it would look like
 
 
+`0x00000000|001`  see, 1 is outbound of 8 bit limits. But the number is not actually 0!.
+
+In order to prevent such confusion, in this situation a Carry Flag is set to 1 to note that although first 8 bits are 0, actual value is not 0.
+
+turning back to the assembly code: 
+
+```
+		01001013  sub         esp,0Ch  
+     6: 	unsigned int a, b, c;
+```
+
+3 integers are initialized. thus, esp should be 12 bits lower than initial phase. here, 
+
+sub esp, 0Ch means (c ==12 in hex) open space for 12 so I fit 3 integers.
+
+a == ebp-4
+b==ebp-8
+c== ebp-12
+
+then `01001016  mov         dword ptr [ebp-4],40h `
+
+moving the value of 40h  to ebp-4, which is a.
 
 
+```
+     9: 	c = b / 32;
+01001026  mov         ecx,dword ptr [ebp-8]  
+01001029  shr         ecx,5  
+0100102C  mov         dword ptr [ebp-0Ch],ecx  
 
+```
+
+registering b, to ebp-8
+
+shifting right by 5, dividing by 32, and writing the ecx on ebp-0c(12)
 
 
 
