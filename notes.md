@@ -256,6 +256,12 @@ in 32 bit architecture, in this kind of a scenario, half of the result it writte
 if the divisor is 0, a `divide by 0 exception` is raised.
 
 
+`REP STOS`
+
+
+
+
+
 
 ## THE STACK
 
@@ -1299,6 +1305,88 @@ since the result is greater than what 32 bit can handle, edx:eax will share the 
 
 
 ![div](img/div.png)
+
+
+so for example: 
+
+```
+divide 0x8 by 0x3.
+0x8==ax
+r/m8==cx
+ah==0x2(remainder)
+al==0x2(quotient)
+```
+
+
+
+
+### Buffer initialization 
+
+
+The C code we will examine in the part is :
+
+
+
+```c
+//VisualStudio runtime check
+//buffer initialization
+//auto-generated code
+//New instruction: rep stos
+
+int main(){
+	char buf[40];
+	buf[39] = 42;
+	return 0xb100d;
+}
+```
+
+here is the disassembled code :
+
+
+```asm
+int main(){
+01331010  push        ebp  
+01331011  mov         ebp,esp  
+01331013  sub         esp,30h  
+01331016  push        edi  
+01331017  lea         edi,[ebp-30h]  
+0133101A  mov         ecx,0Ch  
+0133101F  mov         eax,0CCCCCCCCh  
+01331024  rep stos    dword ptr es:[edi]  
+	char buf[40];
+	buf[39] = 42;
+01331026  mov         byte ptr [ebp-5],2Ah  
+	return 0xb100d;
+0133102A  mov         eax,0B100Dh  
+}
+0133102F  push        edx  
+01331030  mov         ecx,ebp  
+01331032  push        eax  
+01331033  lea         edx,ds:[01331048h]  
+01331039  call        013310B0  
+0133103E  pop         eax  
+0133103F  pop         edx  
+01331040  pop         edi  
+01331041  mov         esp,ebp  
+01331043  pop         ebp  
+01331044  ret 
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

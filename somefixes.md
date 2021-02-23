@@ -7,3 +7,5 @@ then go to file, xproj, change the version to 4.0
 
 then go to preferences, change platform toolset to `inherit` for the given project
 
+
+
