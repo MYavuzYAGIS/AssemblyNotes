@@ -208,16 +208,52 @@ Still much effective than division and faster. becasue just shifting bits around
 when shifting bits to right so much so that it is now outbound of 8 bits, Carry flag(CF) is set to 1 to show that it is not actually 0 but it is carried. 
 
 
+`IMUL` ==> signed Multiplier. 3 forms:
+
+1) imul r/m32  ==> edx:eax=eax*r/m32
+
+for example : `imul ecx` take single parameter.
+
+what does this mean : multiply ecx with eax and write the return to edx:eax
+
+2) imul reg, r/m32 ==> reg=reg*r/m32
+
+for example : `imux eax,ecx`
+
+so eax times ecx and puts it back into eax.
+
+if there is a chance for overlow, we make some modifications so it fits into the first form.
+
+
+
+
+
+3) imul reg,r/m32, immediate   ==> reg=r/m32*immadiate
+
+Multiplication and division have some possible side effects. For example, multiplication of two 32 bits may exceed the bounds of 32 bits of data.
+
+Easiliy.
+
+Thus, it is saved to edx:eax, so that it fits onto 64 bits.
+
+note that `edx:eax` means concatenation. When eax is saved onto edx:eax it means the result of the operation is outbound of 32 bit limits!.
+
+in 32 bit architecture, in this kind of a scenario, half of the result it written on edx and half of it written on eax and compiler figures out to how to output it.
 
 
 
 
 
 
+`DIV` ==> Unsigned Divide.
 
+2 Forms: 
 
+1) divide ax(16 bit of eax) by r/m8 , al=quotient, ah=remainder
 
+2)edx:eax by r/m32, eax=quotient,edx=remainder
 
+if the divisor is 0, a `divide by 0 exception` is raised.
 
 
 
@@ -1163,6 +1199,107 @@ moving the value of 40h  to ebp-4, which is a.
 registering b, to ebp-8
 
 shifting right by 5, dividing by 32, and writing the ecx on ebp-0c(12)
+
+now after the calculations, it is time to return `c`.
+
+return is assigned to `eax`
+```
+    10: 	return c;
+0100102F  mov         eax,dword ptr [ebp-0Ch] 
+```
+
+finally tearing down the stackframe
+
+```
+01001032  mov         esp,ebp  
+01001034  pop         ebp  
+01001035  ret  
+```
+
+First time so far, we have more than 1 local variables, a,b, and c.
+
+here comes the power of mov ebp,esp. in one move, it tears down the stackframe.
+
+once ebp is brought up to esp, whatever under the esp-ebp line is garbage and stackframe is cleared at once! perfect
+
+> Then , when multiplication and division is to be made by power of 2, shr and shl are used.
+
+
+### Multiply and Divide when operand is not power of 2
+
+
+Sometimes a division is made by 3, multiplication is made by 17 etc. not powers of 2.
+
+In that case, we use `div` and `imul`
+
+the C code we will examine is the following:
+
+```c
+//Multiply and divide operations
+//when the operand is not a
+//power of two
+//New instructions: imul, div
+int main(){
+	unsigned int a = 1;
+	a = a * 6;
+	a = a / 3;
+	return 0x2bad;
+}
+```
+
+The disassembled version of the code is the following:
+
+```
+     5: int main(){
+012A1010  push        ebp  
+012A1011  mov         ebp,esp  
+012A1013  push        ecx  
+     6: 	unsigned int a = 1;
+012A1014  mov         dword ptr [ebp-4],1  
+     7: 	a = a * 6;
+012A101B  mov         eax,dword ptr [ebp-4]  
+012A101E  imul        eax,eax,6  
+012A1021  mov         dword ptr [ebp-4],eax  
+     8: 	a = a / 3;
+012A1024  mov         eax,dword ptr [ebp-4]  
+012A1027  xor         edx,edx  
+012A1029  mov         ecx,3  
+012A102E  div         eax,ecx  
+012A1030  mov         dword ptr [ebp-4],eax  
+     9: 	return 0x2bad;
+012A1033  mov         eax,2BADh  
+    10: }
+012A1038  mov         esp,ebp  
+012A103A  pop  
+
+```
+
+so in this example multiplier and divisor are not powers of 2. Hence, we use `imul` and `div`
+
+
+
+so after the generic memory allocation, we need to multiply a with 6.
+
+`012A101E  imul        eax,eax,6 `  so take eax, multiply it with 6 and write it over 6.
+
+Since the multiplication is still inbounds of 32 bit limits, we used the  `r/m32 * immediate` syntax, not the other `imul` syntaxes.
+
+
+
+
+in the scenario of `imul ecx`
+
+so for example, lets say we have 0x44000000 and we want to multiply it with 0x4(r/m32)
+
+since the result is greater than what 32 bit can handle, edx:eax will share the result and while edx holds the 1 at the most left side, eax will hold the rest of the 8 digits.
+
+
+`012A102E  div         eax,ecx  ` here we have div mnemonic, that is unsigned division operator. 
+
+
+
+![div](img/div.png)
+
 
 
 
