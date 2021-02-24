@@ -285,6 +285,10 @@ so takes a value and outputs the negative value.
 
 `LEAVE`==> tearing stackframe(mov esp, ebp   pop ebp  ret)
 
+`REP MOV`==>
+
+
+
 
 ## THE STACK
 
