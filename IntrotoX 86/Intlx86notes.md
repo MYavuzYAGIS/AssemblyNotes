@@ -286,6 +286,7 @@ so takes a value and outputs the negative value.
 `LEAVE`==> tearing stackframe(mov esp, ebp   pop ebp  ret)
 
 `REP MOV`==>
+rep repeats the following string operation ecx times. movs copies data from ds:esi to es:edi and increments or decrements the pointers based on the setting of the direction flag. As such, repeating it will move a range of memory to somewhere else
 
 
 
@@ -1645,6 +1646,56 @@ each time we calculate these and add to `eax`, we then push the eax to the stack
 then regular tear down operations and exiting the program.
 
 If we step into the memcpy call, we see that it also creating its own stackframe alongside our routine's stackframe.
+
+
+## Part 2
+## Linux Counterpart(AT&T Syntax)
+
+
+> IN AT&T Syntax EVERYTYHING IS BACKWARDS!!! MNEMONIC SOURCE, DESTINATION. 
+
+> REGISTERS GET % AND IMMEDIATES GET $ IN FRONT OF THEM
+
+> `mov %esp, %ebp` ==> move esp to ebp, not the reverse.
+
+> `add $0x14, %esp`==> same, and immediate got $ prefix
+
+
+Also difference in m/r32 values:
+
+Intel Syntax == > [base+ index* scale + displacement]
+
+Unix Syntax ==> displacement(base,index,scale)
+
+Example :
+
+
+`call DWORD PTR[ebx+esi*4-0xe8]` ==> Intel
+
+`call *-0xe8(%ebx,%esi,4)` ==> Unix Syntax	==> `*` here is absolute indirect call syntax
+
+Another example:
+
+`lea eax,[ebx-0xe8]` ==> Intel
+
+`lea -x08(%ebx), %eax` ==> Unix Syntax
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
