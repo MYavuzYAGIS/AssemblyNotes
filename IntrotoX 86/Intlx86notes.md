@@ -1875,6 +1875,30 @@ Breakpoint 1, 0x0804842a in main ()
 
 
 
+another command is `x` to examine the memory
+
+Always assumes the given value is a memiory address and it `dereferences`it to look at the value at that memory address.
+
+`print/FMT EXP` print the vlaue of an expression 
+
+
+example : `x/x $ebp`
+0xffffcf98:	0x00000000
+
+example : `print/x %ebp`
+$1 = 0xffffcf98
+
+`break`  or `b`==> sets breakpoint. `b *<address>` or `b main`     
+
+to know about current breakpoints, `info b`
+
+```
+(gdb) info b
+Num     Type           Disp Enb Address    What
+1       breakpoint     keep y   0x0804842a <main+15>
+	breakpoint already hit 1 time
+```
+>  gdb -x command example_32
 
 
 
