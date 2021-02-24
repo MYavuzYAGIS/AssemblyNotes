@@ -1680,6 +1680,62 @@ Another example:
 
 `lea -x08(%ebx), %eax` ==> Unix Syntax
 
+In AT&T Syntax, for instructions which can operate on different sizes, **the mnemonic will have an indicator of the size**
+
+> movb   operates on bytes
+> mov/movw  operates on word(2bytes)
+> movl      operatos on long (dword - 4bytes)
+
+
+Intel does indicate size with things like `mov dword ptr[ebp-4]` but its just not in the actual mnemonic of the instruction.
+
+
+In unix systems, we have GCC. It has many features but we mostly care about `-ggdb` command line argument to build debug symbols
+
+
+
+**gcc basic usage :**
+
+
+
+```
+gcc -o <output filename> < input filename>
+
+our case we will be using the following syntax:
+
+gcc -ggdb -o<filename> <filename>.c
+
+gcc -ggdb -o Example Example.c
+```
+
+**objdump basic usage :**
+
+
+```
+Where object ffile can be an intermediate file create during compilation but before linking, or a fully linked exec.
+
+for our purposes, means any ELF file- the exec format starddart for linux
+
+the main usage for us is `objdump -d file`
+
+can override the output syntax with `-M intel`
+
+```
+so we can go back and forth between intel and at&t
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
