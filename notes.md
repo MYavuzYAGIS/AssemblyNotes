@@ -1475,18 +1475,9 @@ there are 4 on top 4 on bottom byte extra space created and put CCCs below and a
 
 
 
-
-
-
-
-
-
-
-
-
 ## Journey To the Center of MEMCPY
 
-
+So far we could not transfer data memory to memory, we used mov etc to use registers. Instead, memcpy helps direct data-transfer from mem to mem.
 
 
 ```c
@@ -1561,6 +1552,7 @@ value in memory address b is destination, value of memory address of a is source
 here is the disassembled version of the code :
 
 ```asm
+//Journey to the center of memcpy
 #include <stdio.h>
 #include <string.h>
 typedef struct mystruct{
@@ -1569,26 +1561,26 @@ typedef struct mystruct{
 } mystruct_t;
 
 int main(){
-00941010  push        ebp  
-00941011  mov         ebp,esp  
-00941013  sub         esp,10h  
+01281010  push        ebp  
+01281011  mov         ebp,esp  
+01281013  sub         esp,10h  ==> decimal 16
 	mystruct_t a, b;
 	a.var1 = 0xFF;
-00941016  mov         dword ptr [a],0FFh  
-	memcpy(&b, &a, sizeof(mystruct_t)); 
-0094101D  push        8  
-0094101F  lea         eax,[a]  
-00941022  push        eax  
-00941023  lea         ecx,[b]  
-00941026  push        ecx  
-00941027  call        memcpy (941042h)  ==> **!**
-0094102C  add         esp,0Ch  
-	return 0xAce2Ba5e;
-0094102F  mov         eax,0ACE0BA5Eh  
+01281016  mov         dword ptr [ebp-8],0FFh  
+ 	memcpy(&b, &a, sizeof(mystruct_t)); 
+0128101D  push        8  
+0128101F  lea         eax,[ebp-8]  
+01281022  push        eax  
+01281023  lea         ecx,[ebp-10h]  
+01281026  push        ecx  
+01281027  call        01281042  
+0128102C  add         esp,0Ch  
+	return 0xAce0Ba5e;
+0128102F  mov         eax,0ACE0BA5Eh  
 }
-00941034  mov         esp,ebp  
-00941036  pop         ebp  
-00941037  ret  
+01281034  mov         esp,ebp  
+01281036  pop         ebp  
+01281037  ret  
 
 ```
 
@@ -1598,7 +1590,70 @@ nice easter eggs in the return values :)
 `return 0xAce2Ba5e;`  return ace to base :D
 
 
+`01281013  sub         esp,10h  ==> decimal 16` 
 
+creating place for 16 bits. why? because mystruct has an int and 4-bytes array.
+
+we declare two of them(a,b) in total we initially need 16.
+
+
+
+> Read this very very carefully to understand what is happening in memcpy!
+
+- create stackframe 
+
+- SUB ESP, 10H
+
+WHY? our typedef is 4 byte array and an integer in total 8 bytes.
+
+we have two of them
+
+so hex 10 == dec 16. 16 bytes place is created.
+
+
+- THEN, `01281016  mov         dword ptr [ebp-8],0FFh  `
+- 
+DWORD == 4 bitsso adding 0xFF to ebp-8
+
+now we know the structure of our stackframe
+ 
+![memcpy_initial](img/memcpy.png)
+
+So the stackframe is set for 16 bits and divided into 4 equal pieces per mystruct_t structure.
+
+- third step : `memcpy(&b, &a, sizeof(mystruct_t));`
+
+this code will take &a, copy into &b with the size of mystruct_t which is 8 bits.
+
+Hence, the next step is to allocate place for it in the stackframe.
+
+there comes the line `push 8`
+
+- Esp goes down by 8. 
+
+Now we opened a space by 8, thich is the  size of mystruct_t.
+
+next, we will copy the values &a into the &b, where are the values of &a?
+
+`ebp-8` and `ebp-10h`
+
+each time we calculate these and add to `eax`, we then push the eax to the stackframe
+
+```
+0128101F  lea         eax,[ebp-8] ; b.var2  ebp-8
+01281022  push        eax  
+01281023  lea         ecx,[ebp-10h]  ;b.var1 ebp-16(10==16 in dec)
+01281026  push        ecx  
+```
+
+
+- now stackframe is ready for the operation, we can call the memcpy function.
+`01281027  call        01281042  ` 
+
+
+- after memcpy function is called, data swap is done, but we have extra space left in the stackframe. we need to destroy it with `0128102C  add         esp,0Ch ` so removing all the 12 bits from it.
+
+then regular tear down operations and exiting the program.
 
 
 
