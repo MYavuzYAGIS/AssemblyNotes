@@ -1723,8 +1723,155 @@ can override the output syntax with `-M intel`
 ```
 so we can go back and forth between intel and at&t
 
+`gcc -ggdb -M intel  -o example2 Example2.c`
+
+once we have the binary, now we can see the dump
+
+`objdump -d example2 | less`
+
+in order to compile program in 32 bit, after installing `gcc-multilib`, we use -m32 flag
+
+> ` gcc -m32 Example2.c -o example_32`
 
 
+here is the At&t syntax assembly code of the same example2.c we had used previously
+
+```asm
+0804840b <sub>:
+ 804840b:       55                      push   %ebp
+ 804840c:       89 e5                   mov    %esp,%ebp
+ 804840e:       8b 45 08                mov    0x8(%ebp),%eax
+ 8048411:       8d 14 00                lea    (%eax,%eax,1),%edx
+ 8048414:       8b 45 0c                mov    0xc(%ebp),%eax
+ 8048417:       01 d0                   add    %edx,%eax
+ 8048419:       5d                      pop    %ebp
+ 804841a:       c3                      ret    
+
+0804841b <main>:
+ 804841b:       8d 4c 24 04             lea    0x4(%esp),%ecx
+ 804841f:       83 e4 f0                and    $0xfffffff0,%esp
+ 8048422:       ff 71 fc                pushl  -0x4(%ecx)
+ 8048425:       55                      push   %ebp
+ 8048426:       89 e5                   mov    %esp,%ebp
+ 8048428:       53                      push   %ebx
+ 8048429:       51                      push   %ecx
+ 804842a:       83 ec 10                sub    $0x10,%esp
+ 804842d:       89 cb                   mov    %ecx,%ebx
+ 804842f:       8b 43 04                mov    0x4(%ebx),%eax
+ 8048432:       83 c0 04                add    $0x4,%eax
+ 8048435:       8b 00                   mov    (%eax),%eax
+ 8048437:       83 ec 0c                sub    $0xc,%esp
+ 804843a:       50                      push   %eax
+ 804843b:       e8 b0 fe ff ff          call   80482f0 <atoi@plt>
+ 8048440:       83 c4 10                add    $0x10,%esp
+ 8048443:       89 45 f4                mov    %eax,-0xc(%ebp)
+ 8048446:       83 ec 08                sub    $0x8,%esp
+ 8048449:       ff 75 f4                pushl  -0xc(%ebp)
+ 804844c:       ff 33                   pushl  (%ebx)
+ 804844e:       e8 b8 ff ff ff          call   804840b <sub>
+ 8048453:       83 c4 10                add    $0x10,%esp
+ 8048456:       8d 65 f8                lea    -0x8(%ebp),%esp
+ 8048459:       59                      pop    %ecx
+ 804845a:       5b                      pop    %ebx
+ 804845b:       5d                      pop    %ebp
+ 804845c:       8d 61 fc                lea    -0x4(%ecx),%esp
+ 804845f:       c3  
+```
+
+
+
+
+### Hexdump & xxd
+
+sometimes useful to look at a hexdump to see opcodes or raw file format. `hexdump -C` for canonical hex & ASCII view
+
+xxd -make a hexdump or do the reverse
+
+```
+- use as quick hex editor
+- xxd hello > hello.dump
+- edit hello.dump
+- xxd -r hello.dump>hello
+```
+
+So take a file, dump the hex, edit the hex of that dump, reverse compile that dump into binary again. cool and dirty!
+
+
+### GDB - The GNU Debugger
+
+command line debugger
+
+useful syntax for gdb : == 
+
+`gdb <program name> -x <command file>`  ==> `gdb Example-1 -x myCmds`
+
+gdb can be pain in the neck since it is very barebones unless I spesifically ask for something. Thus, using the `-x` flag, we will give a plain text file that encompasses aaaalll the requiered fields so that we dont bear the pain of keep typing commands all the time.
+
+
+```
+display/10i $eip 
+display/x $eax 
+display/x $ebx 
+display/x $ecx 
+display/x $edx 
+display/x $edi 
+display/x $esi 
+display/x $ebp 
+display/16xw $esp 
+break main
+```
+basically this is the content of the file we will feed into gdb.
+
+so lets say we named the file `commands`, `gdb filename -x commands` 
+
+the output will be like
+
+
+```
+Reading symbols from hello...done.
+Breakpoint 1 at 0x40052a: file Hello.c, line 3.
+```
+that works! cool
+
+
+some useful commands in gdb : 
+
+`run` ==> runs the program
+`r <argv>` ==> run the program with the given arguments. 
+`start` ==> set a breakpoint on main and run
+``
+
+
+given the commands up there are 32 bit commands, they wont work with 64 bit programs. Thus, a recompile (using -m32  flag) the file and running the gnu debugger does the trick!
+
+```
+Starting program: /home/myy/Desktop/asm/Example2/example_32 
+
+Breakpoint 1, 0x0804842a in main ()
+1: x/10i $eip
+=> 0x804842a <main+15>:	sub    $0x10,%esp
+   0x804842d <main+18>:	mov    %ecx,%ebx
+   0x804842f <main+20>:	mov    0x4(%ebx),%eax
+   0x8048432 <main+23>:	add    $0x4,%eax
+   0x8048435 <main+26>:	mov    (%eax),%eax
+   0x8048437 <main+28>:	sub    $0xc,%esp
+   0x804843a <main+31>:	push   %eax
+   0x804843b <main+32>:	call   0x80482f0 <atoi@plt>
+   0x8048440 <main+37>:	add    $0x10,%esp
+   0x8048443 <main+40>:	mov    %eax,-0xc(%ebp)
+2: /x $eax = 0xf7fb8dbc
+3: /x $ebx = 0x0
+4: /x $ecx = 0xffffcfb0
+5: /x $edx = 0xffffcfd4
+6: /x $edi = 0xf7fb7000
+7: /x $esi = 0xf7fb7000
+8: /x $ebp = 0xffffcf98
+9: x/16xw $esp
+0xffffcf90:	0xffffcfb0	0x00000000	0x00000000	0xf7e1f647
+0xffffcfa0:	0xf7fb7000	0xf7fb7000	0x00000000	0xf7e1f647
+0xffffcfb0:	0x00000001	0xffffd044	0xffffd04c	0x00000000
+0xffffcfc0:	0x00000000	0x00000000	0xf7fb7000	0xf7ffdc04
+```
 
 
 
