@@ -1443,6 +1443,11 @@ thus, there are 4 pieces which must happen before the actual `rep stos` occurs
 ![repstos](img/repstos.png)
 
 
+So stos takes a byte or a dword, and writes it. Rep prefix tells it how many times to write. For counter to work, `ecx` is set, and in each iteration it decrements by one until it reaches to 0.
+
+
+
+
 
 
 ```
@@ -1476,6 +1481,121 @@ there are 4 on top 4 on bottom byte extra space created and put CCCs below and a
 
 
 
+
+
+
+## Journey To the Center of MEMCPY
+
+
+
+
+```c
+//Journey to the center of memcpy
+#include <stdio.h>
+#include <string.h>
+
+typedef struct mystruct{
+	int var1;
+	char var2[4];
+} mystruct_t;
+
+int main(){
+	mystruct_t a, b;
+	a.var1 = 0xFF;
+	memcpy(&b, &a, sizeof(mystruct_t)); 
+	return 0xAce0Ba5e;
+}
+```
+Now what the code does?
+
+It defines a custom data type: mystruct_t.
+
+This data type has int(var1) and an array of char(var2) of 4 bytes.
+
+when the main function is called, the function declares 2 mystruct_t(a,b)
+
+
+a's var1(int) is set to 0xFF which is 255
+
+then there is a `memcpy` function call. What is memcpy?
+
+```
+The C library function void *memcpy(void *dest, const void *src, size_t n) copies n characters from memory area src to memory area dest.
+
+```
+
+
+for example the following code returns:
+
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+int main () {
+   const char src[50] = "http://www.tutorialspoint.com";
+   char dest[50];
+   strcpy(dest,"Heloooo!!");
+   printf("Before memcpy dest = %s\n", dest);
+   memcpy(dest, src, strlen(src)+1);
+   printf("After memcpy dest = %s\n", dest);
+   
+   return(0);
+}
+```
+
+```
+Before memcpy dest = Heloooo!!
+After memcpy dest = http://www.tutorialspoint.com
+```
+
+thus , memcpy takes 3 arguments: destination to fill, source to fill from, and size.
+`void *memcpy(void *dest, const void * src, size_t n)`
+
+Hence, in our example,
+
+`	memcpy(&b, &a, sizeof(mystruct_t)); `
+
+value in memory address b is destination, value of memory address of a is source and the size is mystruct_t
+
+here is the disassembled version of the code :
+
+```asm
+#include <stdio.h>
+#include <string.h>
+typedef struct mystruct{
+	int var1;
+	char var2[4];
+} mystruct_t;
+
+int main(){
+00941010  push        ebp  
+00941011  mov         ebp,esp  
+00941013  sub         esp,10h  
+	mystruct_t a, b;
+	a.var1 = 0xFF;
+00941016  mov         dword ptr [a],0FFh  
+	memcpy(&b, &a, sizeof(mystruct_t)); 
+0094101D  push        8  
+0094101F  lea         eax,[a]  
+00941022  push        eax  
+00941023  lea         ecx,[b]  
+00941026  push        ecx  
+00941027  call        memcpy (941042h)  ==> **!**
+0094102C  add         esp,0Ch  
+	return 0xAce2Ba5e;
+0094102F  mov         eax,0ACE0BA5Eh  
+}
+00941034  mov         esp,ebp  
+00941036  pop         ebp  
+00941037  ret  
+
+```
+
+
+nice easter eggs in the return values :)
+
+`return 0xAce2Ba5e;`  return ace to base :D
 
 
 
