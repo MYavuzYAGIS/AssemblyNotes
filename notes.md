@@ -1,6 +1,7 @@
 # Intel X86 Processors 
 
-
+## Part 1
+## Windows(Intel Syntax)
 > only 14 assembkly instructions make up to 90 percent of the code!
 
  in intel terminology : a byte is a char(8) , a word is a short(16), int/long is double word(32), double long(64) 
@@ -225,9 +226,6 @@ so eax times ecx and puts it back into eax.
 if there is a chance for overlow, we make some modifications so it fits into the first form.
 
 
-
-
-
 3) imul reg,r/m32, immediate   ==> reg=r/m32*immadiate
 
 Multiplication and division have some possible side effects. For example, multiplication of two 32 bits may exceed the bounds of 32 bits of data.
@@ -239,9 +237,6 @@ Thus, it is saved to edx:eax, so that it fits onto 64 bits.
 note that `edx:eax` means concatenation. When eax is saved onto edx:eax it means the result of the operation is outbound of 32 bit limits!.
 
 in 32 bit architecture, in this kind of a scenario, half of the result it written on edx and half of it written on eax and compiler figures out to how to output it.
-
-
-
 
 
 
@@ -277,16 +272,9 @@ thus, there are 4 pieces which must happen before the actual `rep stos` occurs
 3) ecx to the number of times to store
 
 
-
-
-
-
-
-
-
-
 `NEG`==> 2s Compliment negation. take a positive number make it negative for 2s.
 
+so takes a value and outputs the negative value.
 
 
 `MUL` ==> unsigned multiplication.
@@ -296,9 +284,6 @@ thus, there are 4 pieces which must happen before the actual `rep stos` occurs
 
 
 `LEAVE`==> tearing stackframe(mov esp, ebp   pop ebp  ret)
-
-
-
 
 
 ## THE STACK
@@ -1654,6 +1639,9 @@ each time we calculate these and add to `eax`, we then push the eax to the stack
 - after memcpy function is called, data swap is done, but we have extra space left in the stackframe. we need to destroy it with `0128102C  add         esp,0Ch ` so removing all the 12 bits from it.
 
 then regular tear down operations and exiting the program.
+
+If we step into the memcpy call, we see that it also creating its own stackframe alongside our routine's stackframe.
+
 
 
 
