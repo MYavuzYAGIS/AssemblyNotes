@@ -2224,6 +2224,10 @@ those bytes can then be interpreted as insturctions or data.
 
 thisis sometimes useful if you cannot figure out the inline asm syntaxt for the instruction you want to use, but you  know its opcodes(either from seeing them elseweher or reading the manual)
 
+__emit is for vscode and .byte is the gcc version.
+
+
+
 > **examples**
 
 ```
@@ -2234,6 +2238,27 @@ thisis sometimes useful if you cannot figure out the inline asm syntaxt for the 
 - asm{".byte0x89; .byte0xE5"}; is asm("mov %esp,%ebp");
 
 ```
+
+for example check this :
+
+tthis is `objdump -d <bin>` outcome
+
+```
+ 80482a8:       53                      push   %ebx
+ 80482a9:       83 ec 08                sub    $0x8,%esp
+ 80482ac:       e8 8f 00 00 00          call   8048340 <__x86.get_pc_thunk.bx>
+ 80482b1:       81 c3 4f 1d 00 00       add    $0x1d4f,%ebx
+ 80482b7:       8b 83 fc ff ff ff       mov    -0x4(%ebx),%eax
+ 80482bd:       85 c0                   test   %eax,%eax
+ 80482bf:       74 05                   je     80482c6 <_init+0x1e>
+ 80482c1:       e8 3a 00 00 00          call   8048300 <atoi@plt+0x10>
+ 80482c6:       83 c4 08                add    $0x8,%esp
+ 80482c9:       5b                      pop    %ebx
+ 80482ca:       c3  
+
+```
+
+bytes for push %ebp is 53 so i can __emit or .byte it!
 
 
 
