@@ -2210,8 +2210,9 @@ asm("movl %0, %%eax"::"r"(myVar));
 Seriously, go to hell Richard Stallman! what is this douchbag syntax!
 
 
+`%%` double percent sign means 'this is a regular eax, do not treat it like something special!' whereas `%` single percent sign means, take the `number`th value from output/input operand and put it into the right. `%0` means take the 0th argument, write it onto myVar
 
-
+`=` means to, `::` means from. we can infer the direction of the opeartion from these
 
 
 
