@@ -2096,6 +2096,19 @@ what is the outcome of eax after `atoi ` is implemented??
 
 it is `2: /x $eax = 0x100` 0x100 corresponds to 256 in decimal :) so we converted the string into integer directly and succesfully!!!
 
+if I am in a subroutine and want to leave, the command is `finish`
+
+
+>`ebp+4`, `ebp  + 8` these are taking argv and using them! ALWAYS!
+
+
+### Inline Assembly , gdb & visual studio
+
+inline assembly is a way to include assembly directly into C/C++ file. However, syntax will differ between compilers and assemblers. There are times when you actually have to code asm in order to do something form a C/C++ file.
+
+for example, in OS or driver design inline asm is used. because there are mayny special aspects of hardware which can only be accessed with a special instruction. For
+
+in crypto, you might want to access to the `rol/ror` rotate right/ left instructions which dont have corresponding C syntax.
 
 
 
