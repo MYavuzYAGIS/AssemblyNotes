@@ -2110,6 +2110,106 @@ for example, in OS or driver design inline asm is used. because there are mayny 
 
 in crypto, you might want to access to the `rol/ror` rotate right/ left instructions which dont have corresponding C syntax.
 
+> different assemblers require different syntax.
+
+### Visual Studio Inline Assembly:
+
+> we use intel syntax
+
+__asm{code here};  ==> instructions are separated by \n
+
+two underscores at the beginning, actually does not require ; at the beginning but it helps of auto-indentation
+
+```
+
+__asm{
+			mov eax,[esp+0x4]
+			cmp eax,0xdeadbeef
+			je mylabel
+			xor eax,eax
+mylabel:	mov bl, al
+};
+
+```
+
+syntax using C variables is the same. just put the variable in place of a register name for instance.
+
+the assembler will substitute the correct address for the variable.
+
+
+```
+
+// valueinto C variable from registger
+
+__asm{mov myVar eax};    where myVar is a C variable.
+
+// value into register from C variable
+
+__asm{mov myVar, eax};
+
+```
+
+so address of `myVar` will be inferred by the assembler!
+
+> we cannot use like `__asm{mov var1, var2};` since that would be a mem-mem transfer which is not allowed!!
+
+>> so reg-reg, reg-mem, mem-reg opearetions are allowed just like regular assembly
+
+
+
+### GCC Inline Assembly:
+
+uses AT&T Syntax, obviously.
+
+syntax is : 
+
+`asm("instructions separated by \n");`
+
+> **NEEDS SEMICOLON AFTER THE PARANTHESES!! THIS ONE IS NOT OPTIONAL!**
+
+> we do not need __ but we need \n after every line!
+
+```
+
+asm(
+	"mov 0x4(%esp), %eax\n"
+	"cmp $0xdeedbeef, %eax\n"
+	"je mylabel\n"
+	"xpr %eax,%eax\n"
+	"myLabel: movw %bx, %ax"
+);
+
+```
+
+syntax using C variables are little bit nasty in GCC format!
+
+```
+asm(assembler template
+:output operands   /optional/
+:input operands /optional/
+:list of clobbered registers /optional/ 
+);
+
+```
+
+for example:
+
+
+```
+int myVar; 
+//value into C variable from register
+
+asm("movl %eax %%eax, %0" : "=r"(myVar));
+
+//value into register from C variable
+
+asm("movl %0, %%eax"::"r"(myVar));
+
+```
+
+Seriously, go to hell Richard Stallman! what is this douchbag syntax!
+
+
 
 
 
