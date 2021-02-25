@@ -1818,7 +1818,8 @@ display/x $edi
 display/x $esi 
 display/x $ebp 
 display/16xw $esp 
-break main
+break *main
+run
 ```
 basically this is the content of the file we will feed into gdb.
 
@@ -1950,6 +1951,13 @@ sometimes we need to go back in the stack here are the commands to use then:
 
 >  gdb -x command example_32
 
+inside, `break *main  `  then `run`
+
+each time we `stepi`, it moves one instruction ahead and pops the one on the top.
+
+
+
+
 one of the breakpoints in the file is x/10 i , that gives first 10 instructions starting from `main` function.
 
 
@@ -1975,12 +1983,77 @@ Breakpoint 2, 0x0804841b in main ()
    0x8048443 <main+40>:	mov    %eax,-0xc(%ebp)
    0x8048446 <main+43>:	sub    $0x8,%esp
 
+	2: /x $eax = 0xf7fb7dbc
+	3: /x $ebx = 0x0
+	4: /x $ecx = 0xffffcfb0
+	5: /x $edx = 0xffffcfd4
+	6: /x $edi = 0xf7fb6000
+	7: /x $esi = 0xf7fb6000
+	8: /x $ebp = 0x0
+	9: x/16xw $esp
+	0xffffcfac:	0xf7e1e647	0x00000001	0xffffd044	0xffffd04c
+	0xffffcfbc:	0x00000000	0x00000000	0x00000000	0xf7fb6000
+	0xffffcfcc:	0xf7ffdc04	0xf7ffd000	0x00000000	0xf7fb6000
+	0xffffcfdc:	0xf7fb6000	0x00000000	0xfeb8040f	0xc2eb6a1f
+
+
 ```
 in gbd, stack is configured a little bit differently.
 
 when main called, at the top of the stack there is `eip` of of what called `main()` to run. So address of xyz, which called the main to run, is saved to eip.
 
 then pushed the ebp and esp.
+
+
+when we `stepi`and reach to the next instruction after `main()`, which is `0x804841f <main+4>:	and    $0xfffffff0,%esp`, 
+
+our $esp is `0xffffcfac` , ebp is 0. when we execute the next instruction, which is the `and` instruction above,  
+
+it will be `and`'d wirth 0xfffffff0
+
+in this line `0x804842f <main+20>:	mov    0x4(%ebx),%eax` , this is moving our `argc` (which we did not give when running actually)
+
+to give an argument, (in this case our argument will be the integer 256) , basically `run 256` this will restart the program
+
+now I want to to go 4 steps further from beginning, `stepi 4` voila
+
+
+so we are here `0x804842f <main+20>:	mov    0x4(%ebx),%eax`  (ebp + 0x4) into the eax register.
+
+What is eax +4 ? it is actually the saved eip :/ 
+
+Im actually confused here, compiler should have given us `mov 0xc(%ebp),%eax` ://
+
+
+But we know the structure of the stack, how linuc kernel puts them
+
+```
+argv  ==> parameters
+argc ==> parameters
+saved eip
+saved ebp
+
+aligned space
+```
+
+btw: how to read this `mov    0x4(%ebx),%eax` ?  add 0x4 and % ebx, go to that memory address, take whatever the value is and stick it into eax.
+
+so here `0x8048432 <main+23>:	add    $0x4,%eax`, we are goinf into the array of argvs and passing the first one.
+
+afte executing this , our eax is `0xffffd048`
+
+lets dig in what is happening there.  to dig and see the string in that memory space is done with the syntax `x/s *address` in our case `x/s *0xffffd044`
+
+you wanna see a magic trick ?
+
+we had passed an argv with `run 256` right? now once we stepped into the argv array up there, we now pulled the string version of it with `x/s *0xffffd028` this address is the %eax currently.
+
+this is the outcome: 
+
+```
+(gdb) x/s *0xffffd028
+0xffffd247:	"256"  ;this was the argv we had passed!
+```
 
 
 

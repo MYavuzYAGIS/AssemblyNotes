@@ -6,5 +6,6 @@ display/x $edx
 display/x $edi 
 display/x $esi 
 display/x $ebp 
-display/32xw $esp 
-break main
+display/16xw $esp 
+break *main
+run
