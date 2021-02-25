@@ -1436,10 +1436,6 @@ thus, there are 4 pieces which must happen before the actual `rep stos` occurs
 So stos takes a byte or a dword, and writes it. Rep prefix tells it how many times to write. For counter to work, `ecx` is set, and in each iteration it decrements by one until it reaches to 0.
 
 
-
-
-
-
 ```
 008E101F  mov         eax,0CCCCCCCCh  
 
@@ -2054,6 +2050,58 @@ this is the outcome:
 (gdb) x/s *0xffffd028
 0xffffd247:	"256"  ;this was the argv we had passed!
 ```
+
+argv is a pointer to the pointer. So argv itself points to multpile pointers, and each of these pointers points to a ASCII string values somewhere in the memory.
+
+`*` before the address is dereferencer. also, If I do not want to take it as a string but I want the character, I use `x/c *<address>` that gives the first value
+
+```
+(gdb) x/c *0xffffd028
+0xffffd247:	50 '2'   ; 2 of 256
+```
+
+since the next instruction is a pointer to a pointer, we need to take this into the eax. thus `0x8048435 <main+26>:	mov    (%eax),%eax`
+
+move the memory pointing to the eax, dereference it and write it into eax. Now the value of %eax is not an address but a value that resides in this mem address.
+
+so eax is pointing at `0xffffd028`, whatever in this memory address should be taken as value and to be fed into eax.
+
+this value is , of course 256.
+
+now eax holds the value of 256 not the pointer.
+
+next step (stepi) is `0x8048435 <main+26>:	mov    (%eax),%eax` moving what is into the eax into eax. 
+
+if we want to see what is in the eax now, we should **not dereference it since it is not a pointer anymore**, so instad, take the address of eax and x/s it.
+
+```
+(gdb) x/s 0xffffd247  ; NOTICE THERE IS NO * HERE.
+0xffffd247:	"256"
+```
+to  see char by char, we move bit by bit using x/c.
+
+```
+(gdb) x/c 0xffffd247
+0xffffd247:	50 '2'
+(gdb) x/c 0xffffd248
+0xffffd248:	53 '5'
+(gdb) x/c 0xffffd249
+0xffffd249:	54 '6'
+```
+right before the `atoi` function is called, the next adress, `0x8048440` is saved to eip so that after the function, it will follow up from there.
+
+we do not want to step into `atoi` function's internal mechanism so we do not stepi. instead we used `nexti` its like step over.
+
+what is the outcome of eax after `atoi ` is implemented??
+
+it is `2: /x $eax = 0x100` 0x100 corresponds to 256 in decimal :) so we converted the string into integer directly and succesfully!!!
+
+
+
+
+
+
+
 
 
 
