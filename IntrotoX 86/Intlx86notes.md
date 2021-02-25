@@ -1849,16 +1849,32 @@ Starting program: /home/myy/Desktop/asm/Example2/example_32
 
 Breakpoint 1, 0x0804842a in main ()
 1: x/10i $eip
-=> 0x804842a <main+15>:	sub    $0x10,%esp
-   0x804842d <main+18>:	mov    %ecx,%ebx
-   0x804842f <main+20>:	mov    0x4(%ebx),%eax
-   0x8048432 <main+23>:	add    $0x4,%eax
-   0x8048435 <main+26>:	mov    (%eax),%eax
-   0x8048437 <main+28>:	sub    $0xc,%esp
-   0x804843a <main+31>:	push   %eax
-   0x804843b <main+32>:	call   0x80482f0 <atoi@plt>
-   0x8048440 <main+37>:	add    $0x10,%esp
-   0x8048443 <main+40>:	mov    %eax,-0xc(%ebp)
+   0x08048425 <+10>:	push   %ebp
+   0x08048426 <+11>:	mov    %esp,%ebp
+   0x08048428 <+13>:	push   %ebx
+   0x08048429 <+14>:	push   %ecx
+=> 0x0804842a <+15>:	sub    $0x10,%esp
+   0x0804842d <+18>:	mov    %ecx,%ebx
+   0x0804842f <+20>:	mov    0x4(%ebx),%eax
+   0x08048432 <+23>:	add    $0x4,%eax
+   0x08048435 <+26>:	mov    (%eax),%eax
+   0x08048437 <+28>:	sub    $0xc,%esp
+   0x0804843a <+31>:	push   %eax
+   0x0804843b <+32>:	call   0x80482f0 <atoi@plt>
+   0x08048440 <+37>:	add    $0x10,%esp
+   0x08048443 <+40>:	mov    %eax,-0xc(%ebp)
+   0x08048446 <+43>:	sub    $0x8,%esp
+   0x08048449 <+46>:	pushl  -0xc(%ebp)
+   0x0804844c <+49>:	pushl  (%ebx)
+   0x0804844e <+51>:	call   0x804840b <sub>
+   0x08048453 <+56>:	add    $0x10,%esp
+   0x08048456 <+59>:	lea    -0x8(%ebp),%esp
+   0x08048459 <+62>:	pop    %ecx
+   0x0804845a <+63>:	pop    %ebx
+   0x0804845b <+64>:	pop    %ebp
+   0x0804845c <+65>:	lea    -0x4(%ecx),%esp
+   0x0804845f <+68>:	ret    
+
 2: /x $eax = 0xf7fb8dbc
 3: /x $ebx = 0x0
 4: /x $ecx = 0xffffcfb0
@@ -1898,8 +1914,73 @@ Num     Type           Disp Enb Address    What
 1       breakpoint     keep y   0x0804842a <main+15>
 	breakpoint already hit 1 time
 ```
+`delete <breakpoint number>`
+
+
+sometimes we need to go back in the stack here are the commands to use then:
+
+
+`reverse-step`, `rs` ==> step back until reaching the beginning of a pervious source line
+
+`reverse-stepi`==> step 1 instruction
+
+`reverse-continue` ==> continue program being debugged but run it in reverse
+
+`reverse-finish`==> execute backwards until just before the selected stack frame is called
+
+`reverse-next`, `rn` ==> step backwardsm proceeding through subroutine calls
+
+`reverse-nexti`==> step backwards one instruction
+
+`set exec-direction`==> set direction of exzecution.
+
+`stepi`, `si` ==> steps one asm instruction at at time. **will always step into subroutines**
+
+`step` , `s` ==> steps one source line at at time. If no source is avaliable then acts like stepi
+
+`until`, `u` ==> steps until the next source line, not steping into subroutines.
+
+`nexti`, `n` ==> next instruction, `step over`
+
+
+
+
+
+
+
 >  gdb -x command example_32
 
+one of the breakpoints in the file is x/10 i , that gives first 10 instructions starting from `main` function.
+
+
+```
+Breakpoint 2, 0x0804841b in main ()
+1: x/20i $eip
+=> 0x804841b <main>:	lea    0x4(%esp),%ecx
+   0x804841f <main+4>:	and    $0xfffffff0,%esp
+   0x8048422 <main+7>:	pushl  -0x4(%ecx)
+   0x8048425 <main+10>:	push   %ebp
+   0x8048426 <main+11>:	mov    %esp,%ebp
+   0x8048428 <main+13>:	push   %ebx
+   0x8048429 <main+14>:	push   %ecx
+   0x804842a <main+15>:	sub    $0x10,%esp
+   0x804842d <main+18>:	mov    %ecx,%ebx
+   0x804842f <main+20>:	mov    0x4(%ebx),%eax
+   0x8048432 <main+23>:	add    $0x4,%eax
+   0x8048435 <main+26>:	mov    (%eax),%eax
+   0x8048437 <main+28>:	sub    $0xc,%esp
+   0x804843a <main+31>:	push   %eax
+   0x804843b <main+32>:	call   0x80482f0 <atoi@plt>
+   0x8048440 <main+37>:	add    $0x10,%esp
+   0x8048443 <main+40>:	mov    %eax,-0xc(%ebp)
+   0x8048446 <main+43>:	sub    $0x8,%esp
+
+```
+in gbd, stack is configured a little bit differently.
+
+when main called, at the top of the stack there is `eip` of of what called `main()` to run. So address of xyz, which called the main to run, is saved to eip.
+
+then pushed the ebp and esp.
 
 
 
