@@ -1,6 +1,8 @@
 # Intel X86 Processors 
 
-## Part 1
+## Part 1(Intro)
+
+
 ## Windows(Intel Syntax)
 > only 14 assembkly instructions make up to 90 percent of the code!
 
@@ -2214,7 +2216,24 @@ Seriously, go to hell Richard Stallman! what is this douchbag syntax!
 
 `=` means to, `::` means from. we can infer the direction of the opeartion from these
 
+### _emit & .byte
 
+once you learn about opcodes later on, you can even specify exactly the instructions you want to use by using `_emit` or `.byte` keywords to place specific bytes into the code.
+
+those bytes can then be interpreted as insturctions or data.
+
+thisis sometimes useful if you cannot figure out the inline asm syntaxt for the instruction you want to use, but you  know its opcodes(either from seeing them elseweher or reading the manual)
+
+> **examples**
+
+```
+- __asm{_emit0x55} is __asm{push ebp}
+- __asm{_emit0x89}; __asm{emit0xE5} is _asm{mov ebp,esp}
+
+- asm{".byte 0x55"}; is asm("push %ebp")
+- asm{".byte0x89; .byte0xE5"}; is asm("mov %esp,%ebp");
+
+```
 
 
 
