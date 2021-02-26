@@ -2261,6 +2261,10 @@ tthis is `objdump -d <bin>` outcome
 bytes for push %ebp is 53 so i can __emit or .byte it!
 
 
+https://www.youtube.com/watch?v=PINcCqkkZIo&list=PL038BE01D3BAEFDB0&index=10
+
+20:50
+
 
 
 
