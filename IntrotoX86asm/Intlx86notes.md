@@ -2158,6 +2158,8 @@ so address of `myVar` will be inferred by the assembler!
 >> so reg-reg, reg-mem, mem-reg opearetions are allowed just like regular assembly
 
 
+> when I want to see what is y number upwards of current instruction on gdb: `x/10i <address> - y`
+
 
 ### GCC Inline Assembly:
 
@@ -2261,19 +2263,12 @@ tthis is `objdump -d <bin>` outcome
 bytes for push %ebp is 53 so i can __emit or .byte it!
 
 
-https://www.youtube.com/watch?v=PINcCqkkZIo&list=PL038BE01D3BAEFDB0&index=10
-
-20:50
+## Xtra : How Do Buffer Overflows Work?
 
 
+# END OF PART 1- Introduction to X86_32 Assembly & Architecture
 
-
-
-
-
-
-
-
+> Part 2 is coming soon.
 
 
 
