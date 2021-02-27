@@ -1,4 +1,4 @@
-# intel_x86_32bit
+# Pathway
 My notes from opensecutiytraining.info for personal dev on reverse engineering & malware analysis
 
 ## These notes are taken in order to follow the pathway down :
