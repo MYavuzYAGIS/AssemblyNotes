@@ -1,0 +1,8 @@
+TARGETNAME=BreakOnThruToTheOtherSide
+TARGETTYPE=DRIVER
+TARGETPATH=.
+
+INCLUDES=C:\WinDDK\3790.1830\inc\crt\sys;C:\WINDDK\3790.1830\inc\wxp;C:\WINDDK\3790.1830\inc\dkk\wxp
+
+SOURCES=BreakOnThruToTheOtherSide.c
+

@@ -1,0 +1,8 @@
+TARGETNAME=KernelspaceSegmentRegisters
+TARGETTYPE=DRIVER
+TARGETPATH=.
+
+INCLUDES=C:\WinDDK\3790.1830\inc\crt\sys
+
+SOURCES=KernelspaceSegmentRegisters.c
+

@@ -1,0 +1,11 @@
+
+LIBRARY      ProtMode
+
+DESCRIPTION  'Proxy/Stub DLL'
+
+EXPORTS
+	WinDbgExtensionDllInit	@1
+	ExtensionApiVersion		@2
+	help					@3
+
+	descriptor				@4
