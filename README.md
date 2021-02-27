@@ -7,3 +7,10 @@ My notes from opensecutiytraining.info for personal dev on reverse engineering &
 
 
 ![](ss.png)
+
+
+## You can find my lecture notes in `md` and `pdf` formats. 
+
+## You can also find the C and Asm files in the source directiories within relative dirs.
+
+## This repo is contantly being updated.
