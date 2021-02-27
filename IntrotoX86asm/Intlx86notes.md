@@ -2263,8 +2263,6 @@ tthis is `objdump -d <bin>` outcome
 bytes for push %ebp is 53 so i can __emit or .byte it!
 
 
-## Xtra : How Do Buffer Overflows Work?
-
 
 # END OF PART 1- Introduction to X86_32 Assembly & Architecture
 
