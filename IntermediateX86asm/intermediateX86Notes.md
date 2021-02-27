@@ -40,10 +40,38 @@ there are FLAGS which are 16 bits and also there are E(xtended)FLAGS, which are 
 
 `PUSHFD`: If you need to read the entire EFLAGS register, make usre you use PUSHFD not PUSHF. The difference is, PUSHFD uses Dword size flags so its not 16 bits but 32 bits.
 
-`POPFD`: 
+so PUSHFD takes the flag and puses it to the stack, just like anything else.
+
+opcode for PUSHFD is `9C`
 
 
 
+`POPFD`:  There are some flags which will not be transferred from the stack to EFLAGS unless you are in ring 0. these are security purpose flags. we are generally operating on ring 3.   If you need to set the entiure EFLAGS register, make sure you use `POPFD` not just `POPF`, same 16 bit issue.
+
+opcode for POPFD is `9D`
+
+![flags](img/flags.gif)
 
 
+###  Information Returned by CPUID Instruction
+
+![return](img/cpuidreturn.png)
+
+
+CPUIDs are also returning processor manufacturer ID strings. for example,
+```
+AuthenticAMD
+
+CyrixInstead
+
+GenuineIntel
+
+sis sis sis
+```
+
+This is what I got running the cpuid.c file in the source files
+
+![cpuid](img/CPUID.png)
+
+here `0x16` is actually what is stored in my `eax`. so nothing big.
 
