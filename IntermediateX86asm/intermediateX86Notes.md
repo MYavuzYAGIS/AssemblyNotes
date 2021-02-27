@@ -60,7 +60,7 @@ opcode for POPFD is `9D`
 
 CPUIDs are also returning processor manufacturer ID strings. for example,
 ```
-AuthenticAMD
+AMDisbetter
 
 CyrixInstead
 
@@ -74,4 +74,60 @@ This is what I got running the cpuid.c file in the source files
 ![cpuid](img/CPUID.png)
 
 here `0x16` is actually what is stored in my `eax`. so nothing big.
+
+according to CPUID return value, 0x16 gives this kind of information:
+
+```
+Skylake-based processors (proc base & max freq; Bus ref. freq)	0x16	0x8000 0008
+```
+
+Infortmation provided about the processor :
+
+EAX: VirtualPhysical Address size
+bits 7-0: Physical Address bits
+bits 8-15: bVirtual address bits
+bits 31-16: reserved
+
+
+EBX: Reserved=0
+ECX:  Reserved=0
+EDC:  Reserved=0
+
+
+
+>So, rings and modes:
+
+**`Real mode`** is , when you restart the processor it enter the mode called `real mode` anb basically its like compatibility mode. For example when you run DOS now, it runs on this real mode. No virtual memory, no privilege rings, 16 bit mode.
+
+thats it actually.
+
+Most of the OSs run in protected mode. 
+
+**`Protected Mode`**
+
+this mode is the native state of te processor. Among the capabilirties of protected mode is the ability to directly execuce `Real-address mode`. 8086 software in a protected, multi taskin environment. This feature is called **virtual-8086 mode** althouh it is not actuually a processor mode. 
+
+Virtual-8086 is just for backwards compatibility,.
+
+Protected mode adds support for virtual memory and privile rings.
+
+But when cpu is restarting is restarts in real mode and goes into protected mode. so there is a bootstrapping around 16 bit real mode.
+
+
+
+**`System Management Mode(SMM) `**
+
+This mode provides an operating system or executive with a transferred mechanism for implementing platform-spesific functions such as power management and system security. in this mode, you have reach all of the memory, hardware support. OS and hypervisor cannot reach to this level. 
+
+THUS, SMM has become a popular target for advanced rootkit discussiuons since access to SMM is locked by BIOS, so that neither `ring 0` nor `VMX` hypervisors can access it! Thus, if VMX us more privileged than ring 0 ('ring -1'), SMM is more privileged than VMX('ring -2') because a hypervisor cant even read SMM memory.!
+
+this is sick! once a kit is hooked to this level, it blocks that memory part and is hidden inside!
+
+
+
+
+
+
+
+
 
