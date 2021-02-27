@@ -118,16 +118,49 @@ But when cpu is restarting is restarts in real mode and goes into protected mode
 **`System Management Mode(SMM) `**
 
 This mode provides an operating system or executive with a transferred mechanism for implementing platform-spesific functions such as power management and system security. in this mode, you have reach all of the memory, hardware support. OS and hypervisor cannot reach to this level. 
+The processor enters SMM when the external SMM interups pin (SMI#) is activated or an SMI is received from the advanced progammable interrupt controller (APIC)
 
 THUS, SMM has become a popular target for advanced rootkit discussiuons since access to SMM is locked by BIOS, so that neither `ring 0` nor `VMX` hypervisors can access it! Thus, if VMX us more privileged than ring 0 ('ring -1'), SMM is more privileged than VMX('ring -2') because a hypervisor cant even read SMM memory.!
 
 this is sick! once a kit is hooked to this level, it blocks that memory part and is hidden inside!
 
+`https://github.com/jussihi/SMM-Rootkit` check this for SMM rootkit example
 
 
 
 
+### Privilege Rings
+
+- x86 rings are enforced by hardware.  
+- you often hear that normal programs execute in ring 3(user space) and the privleged code executes in ring 0(kernel space).
+- in order to understand rings, we need to understand a capability called segmentation
 
 
+![rings](img/rings.png)
 
 
+### Paravirtualized XEN!
+
+Requires a modified guest os. 
+what is paravirtualization?
+
+Paravirtualization (PV) is an efficient and lightweight virtualization technique introduced by the Xen Project team, later adopted by other virtualization solutions. PV does not require virtualization extensions from the host CPU and thus enables virtualization on hardware architectures that do not support Hardware-assisted virtualization. However, PV guests and control domains require kernel support and drivers that in the past required special kernel builds, but are now part of the Linux kernel as well as other operating systems.
+
+Paravirtualization implements the following functionality
+
+Disk and Network drivers
+Interrupts and timers
+Emulated Motherboard and Legacy Boot
+Privileged Instructions
+
+
+so instad of guest OS is touching to the hardware, it touches an API and that API controls these requests. 
+
+
+## SEGMENTATION
+
+Segmentation provides a mechanism dividing the processor's addressable memory space ( called linead address space) into smaller protected address spaces called (segments)
+
+Day1 Part3
+
+https://www.youtube.com/watch?v=7ffxs6b5Gs4&list=PL8F8D45D6C1FFD177&index=3
