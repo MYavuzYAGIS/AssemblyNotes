@@ -389,3 +389,86 @@ void SelectorPrint(char * segRegName, unsigned short segReg){
 }
 ```
 we are downloading and using `debugview V 4.76` here. I will add it to the repo.
+
+after opening the app with escalated privileges, we will enable the kernel capture (the red button)
+
+![debug](img/debug.png)  
+
+
+
+running the app above , we have this output:
+
+
+
+![](img/registers.png)
+
+
+So segment selector store in the cs selector = 0x23.
+its requested privilege is 3 means its on ring 3, user space.
+its in the GDT level, so got the value 0 on TI.
+
+
+in command prompt we cd into Desktop/intermediatex86/KernelSpaceSegmentRegisters folder, which is added to this repo. Basically it is the code I copied above.
+and run `load.bat`
+the same output can be seen on the DebugView app.
+
+![user-kernel](img/user-kernel.png)
+
+Userspace is set everything to work on RPL 3, ring 3 , which is the user space itself whereas kernelSpace segmentation shows taht RPL is set to  0 and 3.
+`DS` and `ES` do not change between kernel and userspaces.
+
+so whtt is our intake from this?
+
+windows maintains different CS, SS & FS segment selectors for userspace processes vs kernel ones.
+
+The RPL field seems to correlate with the ring for kernel or userspace
+
+windows does not change DS and ES between kernel and userspcaces.
+
+Windows does not use GS.
+
+
+### GDT & LDT
+
+![](img/gdt%20ldt.png)
+
+
+so we have GDT and LDT arrays. the segment selector is loaded with the information to where to look which is a 2 bit place of TI. it is either GDT(0) or LDT(1).
+
+Each entry in this table is 8 bytes. 
+
+**GDT**:
+
+the upper 32 bits ("base address") of the register specify the linear address where the GDT is stored.
+
+the lower 16 bits("table limit) specify the size of the table in bytes
+
+special instuctions used to load a vlua into the register or store the value out to memory:
+
+these special instructions are :
+
+LGDT ==> load 6 bytes from memory to GDTR
+
+GDTR ==> store 6 bytes of GDTR to memory.
+
+
+A GDT ASCII schema.
+
+```
+
+47(79)									 16	 15					0
+============================================================
+|		32(64)-bit Linear Base Address  |  	16BitTableLimit	|
+|										|					|
+=============================================================
+```
+
+
+
+
+
+so GDTR has 16bit chunk of `limit` and 32 bit size of `base`. upon call, register goes to the table and checks the limit of the gdtr. based on this limit, it locates the logical memory address.
+
+
+this is the playgound of the operating system, it does not want third party softwares to mess with it.
+
