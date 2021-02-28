@@ -272,9 +272,11 @@ Processor differenciates between code access and data access. When we observe a 
 
 Stack segments are data segments which must be read/write segments. Loading the SS register with a segment sleector for a nonwritable data segment generates a general-protection exception(#GP)
 
+hardware uses the SS for data access. All the data and all the frame is sort if within the SS.
+
 - `DS` ==> Data Segment
 
-
+Data register is the register that holds and acts on data. rep movs or rep stos for example moves data back and forth between DS and ES.
 
 
 
@@ -283,3 +285,10 @@ Stack segments are data segments which must be read/write segments. Loading the 
 
 
 
+
+![ss](img/ss.png)
+
+
+- the "hidden part" is like a cache so that segment descriptor info doesnt have to be looked ip each time.
+
+> Segments can overlap. code can be data and data can be code. this is very normal.
