@@ -278,7 +278,7 @@ hardware uses the SS for data access. All the data and all the frame is sort if 
 
 Data register is the register that holds and acts on data. rep movs or rep stos for example moves data back and forth between DS and ES.
 
-
+This is like a general purpose register, you can put whatever you want and use it freely. 
 
 
 - `ES/FS/GS` ==> Extra(usually data) segment registers
@@ -286,9 +286,110 @@ Data register is the register that holds and acts on data. rep movs or rep stos 
 
 
 
+> Segments can overlap. code can be data and data can be code. this is very normal.
+
+> One big intake from here is **Hardware uses CS for all these nice insturctions!**
+
+SS for data moving, CS is for all these jumps, compares, adds etc.
+
+
+
+
 ![ss](img/ss.png)
+
+
+There is a visible part and there is a hidden part.
+
+visible part is where segment selector, which is 16 bits. but since the hardware does not want to walk through the table all the time. upon the call, hardware walks the table once, and the caches information into hidden part.  So takes the description, takes what is asked from it, and caches the rest into hidden part.
+
+so once CS reaches one part of the table, rest is also reachable via hidden part.
 
 
 - the "hidden part" is like a cache so that segment descriptor info doesnt have to be looked ip each time.
 
-> Segments can overlap. code can be data and data can be code. this is very normal.
+#### Implicit use of segment registers:
+
+When you are **accessing** the stack, you are implicitly using a logical address that is using the SS(stack register) as the segment selector
+so `ESP ==SS:ESP`  pushing and popping esp for example.
+
+when you are **modifying** EIP,(with jumps, calls, rets) you are implicitly using the CS(code segment) register as the segment register. `EIP = CS:EIP`
+
+Even if a disassembhler does not show it, the use of segment registers is built into some of the instructions.
+
+#### Explicit use of segment registers:
+
+You can write assembly which explicitly specifies which segment registers to use. Just prefix the memory address with a segment register and a colon.
+
+`mov eax,[ebx]` vs `nov eax, fs:[ebx]` 
+
+the assembly just puts a prefix on the instruction to say when this inst is asking for memory, its actually asking for memory in this segment.
+
+Actually this way you are specifying a full logical address/far pointer.
+
+using `UserspaceSegmentRegisters.c` file in the source folder, we will go little bit forward and apply what was on theory now
+
+here is the C code :
+
+
+```c
+#include <stdio.h>
+
+//prototype for helper function
+void SelectorPrint(char * segRegName, unsigned short segReg);
+
+int main(){
+	unsigned short myCS, myDS, myES, myFS, myGS, mySS;
+
+	//Move the segment registers into the C variables
+	__asm{
+		mov myCS, cs;
+		mov myDS, ds;
+		mov myES, es;
+		mov myFS, fs;
+		mov myGS, gs;
+		mov mySS, ss;
+	}
+
+	//Each segment register holds a 16 bit segment selector which is defined as
+	//15     3 2 1 0
+	//---------------
+	//| Index |T|RPL| ... ASCII "ART" FTW!
+	//---------------
+	//RPL = Requested Privilege Level (2 bits)
+	//T = Table Indicator, 0 = GDT, 1 = LDT (1 bit)
+	//Index = This selector selects the Index-th entry in the GDT or LDT (13 bits)
+
+	//Parse the meaning of the selectors stored in the registers
+	SelectorPrint("cs", myCS);
+	SelectorPrint("ss", mySS);
+	SelectorPrint("ds", myDS);
+	SelectorPrint("es", myES);
+	SelectorPrint("fs", myFS);
+	SelectorPrint("gs", myGS);
+
+	return 0x0ddba11;
+
+}
+
+void SelectorPrint(char * segRegName, unsigned short segReg){
+	printf("The segment selector stored in the %s register = %#x\n", segRegName, segReg);
+	if(segReg == 0){
+		printf("A segment selector of 0 is invalid because the 0th entry of the GDT is never used\n\n");
+		return;
+	}
+	printf("\tIts Requested Privilege Level is %u\n", (segReg & 0x3));
+	printf("\tIt selects a segment in the ");
+	if((segReg & 0x4) == 0){
+		printf("GDT ");
+	}
+	else{
+		printf("LDT");
+	}
+	printf(" of index %#x\n\n", segReg >> 3);
+}
+```
+
+
+https://www.youtube.com/watch?v=7ffxs6b5Gs4&list=PL8F8D45D6C1FFD177&index=3
+
+29:07
