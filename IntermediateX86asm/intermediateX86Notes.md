@@ -484,6 +484,20 @@ LLDT == > load 16 bit segment into LDTR
 
 SLDT ==> store 16 bit segment sel3efctor of LDTR to memory
 
-https://www.youtube.com/watch?v=7ffxs6b5Gs4&list=PL8F8D45D6C1FFD177&index=3
+<br></br>
+>#### So what are the **Segment Descriptors**?
 
-55:28
+
+Each segment has a segment descriptor, which specifies the size of the segment the access rights and privilege level for the segment type and the location of the firts byte of the segment in the linear adderss space, aka, base address of the segment
+
+It has a 32 bits base, linear address where the segment start.
+
+it has limits(16+4 bits) size of segment(either in bytes or 4kb blocks) end of segment = base + limit
+
+it has G(ranularity) flag. If grannularity flag is 0 , interpret lmit as size in btyes. if it is 1, interpret is as 4kb blocks.
+
+DPL(decriptor privilege level) 2 bits - can rtangrom 0 to 3 with 0 being most privileged level.
+
+it has D/B (default operation) size size flag. 0=16bit default ,1=32 bit default. This is what actually controls whether and overloade opcode is interpreted as dealing with 16 or 32 bit register/memory sizes.
+
+https://www.youtube.com/watch?v=hSTfeHWcAqA&list=PL8F8D45D6C1FFD177&index=4
