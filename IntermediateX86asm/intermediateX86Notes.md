@@ -225,6 +225,8 @@ Intended to be a table per-process and switched when the kernel switches between
 Note that the table index is actually 13 bits not 16, so the tables can each hold 2ˆ13=8292 descriptors
 
 
+index is supposed to match the required offset. based on its position on the array, segment selectors get indexed and offset finds them on index numbers.
+
 
 
 
