@@ -161,6 +161,4 @@ so instad of guest OS is touching to the hardware, it touches an API and that AP
 
 Segmentation provides a mechanism dividing the processor's addressable memory space ( called linead address space) into smaller protected address spaces called (segments)
 
-Day1 Part3
-
-https://www.youtube.com/watch?v=7ffxs6b5Gs4&list=PL8F8D45D6C1FFD177&index=3
+When we talk about segmentation and segment registers, we are talking about their interactions with the `Linear Address Space` which is actually on the virtual memory **but maps to phsical memory 1 to 1 so it is safe to say that it is pyhical memory __at least until we start to talk about paging.__**
