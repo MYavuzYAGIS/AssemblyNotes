@@ -159,6 +159,9 @@ so instad of guest OS is touching to the hardware, it touches an API and that AP
 
 ## SEGMENTATION
 
+**NOTE THAT INX64 ARCHITECTURE, SEGMENTATION IS NOT USED. THIS IS MERELY FOR 32 BIT**
+
+
 Segmentation provides a mechanism dividing the processor's addressable memory space ( called linead address space) into smaller protected address spaces called (segments)
 
 When we talk about segmentation and segment registers, we are talking about their interactions with the `Linear Address Space` which is actually on the virtual memory **but maps to phsical memory 1 to 1 so it is safe to say that it is pyhical memory __at least until we start to talk about paging.__**
@@ -230,6 +233,9 @@ index is supposed to match the required offset. based on its position on the arr
 
 
 
+
+
+
 ### Anatomy of a segment selector
 
 
@@ -252,6 +258,28 @@ this is one bit. binary. either Global table or Local table where:
 0 =GDT
 
 1=LDT
+
+### the Six Segment Registers
+
+- `CS` ==> Code Segment
+
+Hardware always uses the code segment. duriung the code execution, hardware implicity goes to logical address and uses CS register. So in the code you are jumping from 1 to 3, the hardware reads the code and goes to cS and it loooks the table and index and then executes the code. So cs is ALWAYS used implicitly by the hadrware for code access!
+
+Processor differenciates between code access and data access. When we observe a change in `eip` register that is a code access. hardware knows where to go into the memeory to pull the eip and address for the next instruction. but when we move data from here to there, `mov` its the job of the stack segment
+
+
+- `SS` ==> Stack Segment 
+
+Stack segments are data segments which must be read/write segments. Loading the SS register with a segment sleector for a nonwritable data segment generates a general-protection exception(#GP)
+
+- `DS` ==> Data Segment
+
+
+
+
+
+
+- `ES/FS/GS` ==> Extra(usually data) segment registers
 
 
 
