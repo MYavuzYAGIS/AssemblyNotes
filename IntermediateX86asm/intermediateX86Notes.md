@@ -388,8 +388,4 @@ void SelectorPrint(char * segRegName, unsigned short segReg){
 	printf(" of index %#x\n\n", segReg >> 3);
 }
 ```
-
-
-https://www.youtube.com/watch?v=7ffxs6b5Gs4&list=PL8F8D45D6C1FFD177&index=3
-
-29:07
+we are downloading and using `debugview V 4.76` here. I will add it to the repo.
