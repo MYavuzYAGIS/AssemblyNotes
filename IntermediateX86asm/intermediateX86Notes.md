@@ -430,6 +430,8 @@ Windows does not use GS.
 
 ### GDT & LDT
 
+#### GDT
+
 ![](img/gdt%20ldt.png)
 
 
@@ -472,3 +474,16 @@ so GDTR has 16bit chunk of `limit` and 32 bit size of `base`. upon call, registe
 
 this is the playgound of the operating system, it does not want third party softwares to mess with it.
 
+#### LDT
+
+like the segment registersm, the LDT has a visbile part, the segment selector and a hidden part, the cached segoment info which sepcifies the size of the lds
+
+special instuctions:
+
+LLDT == > load 16 bit segment into LDTR
+
+SLDT ==> store 16 bit segment sel3efctor of LDTR to memory
+
+https://www.youtube.com/watch?v=7ffxs6b5Gs4&list=PL8F8D45D6C1FFD177&index=3
+
+55:28
