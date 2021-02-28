@@ -162,3 +162,94 @@ so instad of guest OS is touching to the hardware, it touches an API and that AP
 Segmentation provides a mechanism dividing the processor's addressable memory space ( called linead address space) into smaller protected address spaces called (segments)
 
 When we talk about segmentation and segment registers, we are talking about their interactions with the `Linear Address Space` which is actually on the virtual memory **but maps to phsical memory 1 to 1 so it is safe to say that it is pyhical memory __at least until we start to talk about paging.__**
+
+so segmentation therefore taking the code from chunk of memory or instructions and saving them into  ring 3, ring 0 etc.
+
+
+During this interaction, segment registers take the instuction or data, pipes it through the `segment addressing` process and then undertakes the operation per requested.
+
+But what is segment addressing?
+
+To locate a byte, (finding an address in the memory for example), a **logical address** also called a far pointer must be provided. A logical address consists of a `segment selector` and an `offset`. Offset belongs to the address that is being selected.
+
+So you select the segment first. and within this segment, you select an address, this address selection is made by providing offset of the address
+
+The phsical address space is defined as the range of addresses that the procesor can generate on its address bus.
+
+Phsical address space is  based on how mch RAM you have installed basically. in 32 bit, it is up to a maximum of 4GB since 2ˆ32 = 4GB. But there is a mechanism (phsical address extensions-PAE) which allows systems to access a space up to 64 GB.
+
+`Linear Address space`, on the other hand, in 32 bit systems, is a flat 32 bit space. 
+
+
+
+Segmentation is not optional. Segmentation translates logical addresses to linear addresses automatically in hardware by using table lookups.
+
+logical address(far pointer yani) == 16 bit segment selector + 32 bit offset.
+
+if paging is disabled, linear addresses map directly to phsical addresses.
+
+![segment](img/segment.png)
+
+
+when using a selector of logical address, it goes to segment selector. This segment selector goes to the descriptor table(this is just a big array that holds access - limit and base addresses which we pull) and selects what is needed based on the offset becasue each segment descriptor in the descriptor table holds many addresses, offset is used to specify which one to pull exactly. Once the base address pulled up from the descriptor table, it maps this address to linear address.
+
+think of it like cargo companies.
+
+there is an address parcel needs to be delivered to. this is the base address. We first specify which city and neiggborhood it is in. this is segment selector.
+
+> A nice description below
+```
+Segment selector says this is in Istanbul_Uskudar. Okay but there are lots of addresses in istanbul uskiudar. then the next piece of information comes. to this selector, we add offset.offset gives the full address and parcel is reached.
+
+so offset is added to the segment selector after segmentation is reached.
+
+after that, hardware maps it to the linear addresses, so that real memory can be reached.
+```
+
+### Segment Selectors
+
+A segment selector is a 16 bit value held in a segment register which is also 16 bit.
+
+Segment registers are up to 6. namely they are `CS SS DS ES FS GS `
+
+ It is used to select an index for a segment descriptor from one of two tables:
+
+**Global Descriptor Table** (GPT)
+this is for system-wide use
+
+
+**Local Descriptor Table** (LPT)
+
+Intended to be a table per-process and switched when the kernel switches between process contexts.
+
+Note that the table index is actually 13 bits not 16, so the tables can each hold 2ˆ13=8292 descriptors
+
+
+
+
+
+### Anatomy of a segment selector
+
+
+```
+15                           3  2  1  0
+|-------------------------------------|
+|  INDEX                      | T|RPL |
+|                             | I|    |
+|-------------------------------------|
+```
+
+RPL == Requested Privilege level
+
+2 bit value means it can hold values from 0 to 3 so think of it as ring0, ring3
+
+TI = Table indicator
+
+this is one bit. binary. either Global table or Local table where:
+
+0 =GDT
+
+1=LDT
+
+
+
