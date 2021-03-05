@@ -141,9 +141,21 @@ This does not have to be 100 percent accurate, but gives a clue.
 
 `WORD NumberOfSections`
 
+Tells how many section headers will be there later.
+
+
+
 `DWORD TimeDateStamp`
+
+
+this is pretty interesting field. It is a Unix timestamp (seconds since epoch where epoc is 00:00:00 UTC on jan 1, 1970) and is set at link time.
+
+so bascally how many seconds have elapsed since the epoch.
+
+Can be used as a unique version for the given file.(this file is compiled on tatata timestamp.)
+can be used to know when a file was linked (**useful for determining whether an attacker tool is fresh or correlating with other forensic evidence keeping in mind that attackers CAN manipulate it.**)
+
 
 `WORD Characteristics`
 
-
-
+Characteristics field is used to specify many things like line numbers that are stripped, 32 bit word machine , that it is a system file, etc.
