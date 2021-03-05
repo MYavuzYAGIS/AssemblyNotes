@@ -1,6 +1,6 @@
-Metadata-Version: 1.0
+Metadata-Version: 1.1
 Name: pefile
-Version: 1.2.10-121
+Version: 1.2.10.post121
 Summary: Python PE parsing module
 Home-page: http://code.google.com/p/pefile/
 Author: Ero Carrera
