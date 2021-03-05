@@ -58,3 +58,90 @@ this is where attackers employ **DLL injection attacks**
 .lib on windows and .a on Linux. Static libraries are a bunch of object files with some specific header info to describe the organization of files.
 
 these are used when you want to compile all files together to later be linked against statically. so you say to your linker basically that do not use the `printf` or `scanf` functionj in the standard library but use the one I gave you through the static libray.
+
+> Common Windows PE file Extensions: 
+
+- exe ==> executable file
+- dll ==> dynamic link library
+- sys/drv  ==> System File (kernel driver)
+- ocx => ActiveX control
+- .cpl==>Control panel
+- .scr ==> screensaver 
+
+So screensavers are full executables, which can deliver malware!
+
+
+
+#### PE DOS HEADER
+
+When a PO Dos file is opened and seen, there are bunch of header files are imported and executed. Two of these are 
+
+`WORD e_magic` ==> magic number and `LONG e_Ifanew` ==> file address of new exe header, its an offset to the next instruction
+
+These are contained, alondside many other, under a typedef struct IMAGE_DOS_HEADER typedef function.
+
+so this is a exe header.
+
+
+`e_magic` ==> is always going to be set to ASCII 'MZ' which is from Mark Zbikowski who developed MS-DOS
+
+For mot windoes programs the DOS header contains a stub DOS program which does nothing but print out `This program cannot be run in DOS mode`
+
+`e_lfanew` ==> this is what we care about mostly. this specifies a file offset where PE header can be found(a file pointer gibi dusun.)
+
+
+
+Ben `Peview` ile rastgele bir program actim mesela :) karsima cikan ilk sey :
+
+![dosmode](img/DOS%20MODE.png)
+
+also at the very first line is MZ :)
+
+and also we have file offset.
+
+
+so there is .exe, there is 'MZ'  and rthere is DOS MODE sign. three of these are indicates that we are dealign with a windows file :)
+
+
+
+#### PE NT HEADER , FILE HEADER
+
+this is Image NT Headers. which containes 3 headers actually. signature, file header, optional header.
+
+![Pe header](img/Screen%20Shot%202021-03-05%20at%2019.48.43.png)
+
+
+Signature == 0x00004550 also known as ASCII string "PE"in little endian order in DWORD. Otherwise, just a holder for two other `embedded` (not pointed to) strucrts.
+
+
+`IMAGE_FILE_HEADER` and `IMAGE_OPTIONAL_HEADER` are embedded in there, they are not pointed at.
+
+> **__IMAGE_FILE_HEADER__** 
+
+We care about couple of stuff in this header.
+
+the important ones are :
+
+`WORD Machine`
+
+Machine specifies what architecture this is supposed to run on. This is our first incitator about 32 or 64 bit binary.
+
+check the data seciton in the header.
+
+Value 0f `014C` = x86 binary, PE32 binary.
+
+Value of `8664` = X86-64 binary yani AMD64 yani 64bit yani PE32+ binary.
+
+
+This does not have to be 100 percent accurate, but gives a clue.
+
+
+
+`WORD NumberOfSections`
+
+`DWORD TimeDateStamp`
+
+`WORD Characteristics`
+
+
+
