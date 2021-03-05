@@ -500,4 +500,4 @@ DPL(decriptor privilege level) 2 bits - can rtangrom 0 to 3 with 0 being most pr
 
 it has D/B (default operation) size size flag. 0=16bit default ,1=32 bit default. This is what actually controls whether and overloade opcode is interpreted as dealing with 16 or 32 bit register/memory sizes.
 
-https://www.youtube.com/watch?v=hSTfeHWcAqA&list=PL8F8D45D6C1FFD177&index=4
+6287-A
