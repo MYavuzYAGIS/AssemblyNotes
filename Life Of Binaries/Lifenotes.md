@@ -47,6 +47,11 @@ There are different target binary formats :
 
 .dll on windows and .so in linux.(.so is shared object) needs to be loaded by some other protgram in order for any of the code to be executed. the library may have some code which is **automatically** executed at load time. (the DllMain() on windows or init() on linux) This is as opposed to a library whiuch executes non of its own code and only provides codes to other programs
 
+So these have main() functions basically, when they are called, they got executed
+
+It starts running initialization code, and step by step calls other funcitons or librarues. 
+
+this is where attackers employ **DLL injection attacks**
 
 > Static Library:
 
