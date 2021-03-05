@@ -10,3 +10,5 @@ so lets say we used `printf`, in runtime linker period, it is obvious that we di
 
 And so loader takes them to memory and you get your program running afterwards.
 
+![compiler](img/compiler.png)
+
