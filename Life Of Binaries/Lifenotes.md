@@ -132,6 +132,8 @@ Value 0f `014C` = x86 binary, PE32 binary.
 
 Value of `8664` = X86-64 binary yani AMD64 yani 64bit yani PE32+ binary.
 
+8664 makes sense, 86_64 :)
+
 
 This does not have to be 100 percent accurate, but gives a clue.
 
