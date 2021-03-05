@@ -12,3 +12,7 @@ And so loader takes them to memory and you get your program running afterwards.
 
 ![compiler](img/compiler.png)
 
+So linkes is basically : 
+
+`There are 2 or more objects spit out from the previous process, they need to be linked togetger in the desired way. So this sorts and orders these objects and their internals to craete a executably or a library file.`
+
