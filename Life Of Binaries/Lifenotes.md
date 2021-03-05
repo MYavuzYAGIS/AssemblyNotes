@@ -158,4 +158,13 @@ can be used to know when a file was linked (**useful for determining whether an 
 
 `WORD Characteristics`
 
-Characteristics field is used to specify many things like line numbers that are stripped, 32 bit word machine , that it is a system file, etc.
+Characteristics field is used to specify many things like line numbers that are stripped, 32 bit word machine , that it is a system file, it cam handle >x GB of ram etc.
+
+> **__IMAGE_OPTIONAL_HEADER__** : 
+
+this is a field we do not really care about. SizeOfOptionalHeader can theoratically be shrunk to exclude data directory fields which the linked does not need to include.
+PointerToSymbolTable ,
+NumberOfSymbols not used anymore now that the debug info is stored in a separate file.
+
+
+https://www.youtube.com/watch?v=zwJIeD72E_E&list=PLUFkSN0XLZ-n_Na6jwqopTt1Ki57vMIc3&index=8
