@@ -56,3 +56,5 @@ this is where attackers employ **DLL injection attacks**
 > Static Library:
 
 .lib on windows and .a on Linux. Static libraries are a bunch of object files with some specific header info to describe the organization of files.
+
+these are used when you want to compile all files together to later be linked against statically. so you say to your linker basically that do not use the `printf` or `scanf` functionj in the standard library but use the one I gave you through the static libray.
