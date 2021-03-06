@@ -318,3 +318,7 @@ An example can be seen below:
 
 
 ![data_entries](../Life%20Of%20Binaries/img/data_directory.png)
+
+> Playing bitHunt Scavenger level 2 here is my result
+
+![round2](../Life%20Of%20Binaries/img/round2.png)
