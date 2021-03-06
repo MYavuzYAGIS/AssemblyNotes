@@ -209,13 +209,61 @@ Image Base is the information pertains to where this program wants to be located
 
 In 64 bits, the type is ULONGLONG.
 
+Thus, it specifies the preferred virtual memory locatiuon where the beginning of the biunary should be replaced. If the binary cannot be loaded at ImageBase(for example something else is running that memory) then the loader picks an unused memory range. Then , every loaction in the binary which was compiled assuming that the binary was loaded at ImageBase must be fixed by adding the difference between the actual ImageBase minus desired Image base.
+
+
+The list of places must be fixed and kept in a special `relocations` (.reloc) section.
+
+Hence, Microsoft does not support position-independent code.
+
+
 
 >`SectionAlignment`
+
+specifies that sections must be aligned on boundries which are multiples of this value. for example, if it is 0x1000, then you might expect to see sections starting agt 0x1000, 0x2000, 0x5000 etc.
+
+0x1000 is size of a page in intel 32 systems.
+
 
 
 
 
 >`FileAlignment`
+
+
+data was written to binary in chunks no smaller than this value. some common values are 0x200, (512, the size of a HDD sector) and 0x80,(size of sector in floppy.) SSDs use 4KB size.
+
+this is from AskUbuntu.com: 
+
+
+```
+In the old days, 512 byte sectors was the norm for disks. The system used to read/write sectors only one sector at a time, and that was the best that the old hard drives could do.
+
+Now, with modern drives being so dense, and so fast, and so smart, reading/writing sectors only one sector at a time really slows down total throughput.
+
+The trick was... how do you speed up total throughput, but still maintain compatibility with old/standard disk subsystems? You create a 4096 block size that are made up of eight 512 byte physical sectors. 4096 is now the minimum read/write transfer to/from the disk, but it's handed off in compatible 512 byte chucks to the OS.
+
+This means that even if the system only needs one 512 byte sector of information, the drive reads eight 512 byte sectors to get it. If however, the system needs the next seven sectors, it's already read them, so no disk I/O needs to occur... hence a speed increase in total throughput.
+
+Modern operating systems can fully take advantage of native 4K block sizes of modern drives.
+
+```
+
+Also according to Intel.com, ` Intel® Solid State Drives support a 512 byte and 4096 byte (4K) physical sector size.`
+
+
+EZ. Take this much of a bunch and write it this much. 512 bloklar halinde yani.
+
+
+If you dont have multiples of hex 0x200, then you need to put some paddings file before putting the next section. lets say your file is 10 bytes,
+
+you write it and pad it until the next file offset , end of 512. and keep writing the next section
+
+
+
+
+
+>SO FILE ALIGNMENT IS HOW YOU ALIGN ITEMS ON DISK WHEREAS SECTION ALIGNMENT IS HOW YOU ALIGN THEM ON MEMORY
 
 
 
