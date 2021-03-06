@@ -452,6 +452,20 @@ Because RVA is an offset, we can just add RVA and ImageBase and get the Actual b
 
 ```
 
+## <span style="color:green">PE IMPORTS</span>:
+
+#### ## <span style="color:red">Static Linking vs Dynamic Linking</span>:
+
+
+Static linking is on compile time VERSUS dynamic is runtime!
+
+with static linking, you literally just include a copy of every helper function you use inside the executable you are generating.
+
+Dynamic linking is when you **resolve pointers** to functions inside libraries **at runtime**
+
+
+
+A statistically lniked executable is bloated compared to a dynamically linked on. But, on the other it is standalone, without outside dependendcides.
 
 
 
@@ -470,6 +484,3 @@ Because RVA is an offset, we can just add RVA and ImageBase and get the Actual b
 
 
 
-
-
-https://www.youtube.com/watch?v=SBo-ZZBwkok&list=PLUFkSN0XLZ-n_Na6jwqopTt1Ki57vMIc3&index=11
