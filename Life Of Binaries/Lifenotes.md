@@ -439,7 +439,7 @@ lets explain those column names:
 
 
 
->NOTE
+>**NOTE**
 
 ```
 RVA == the virtual address.
@@ -451,6 +451,23 @@ Actual Value = ImageBase + RVA.
 Because RVA is an offset, we can just add RVA and ImageBase and get the Actual base value, which is the mapped address on the memory
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
