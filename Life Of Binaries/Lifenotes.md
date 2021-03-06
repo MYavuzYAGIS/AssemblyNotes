@@ -311,6 +311,8 @@ it holds the pointers where the debug infromation can be found, where the digita
 
 super informative header!!
 
+It is like a big map that points at tll the other data structures.
+
 An example can be seen below:
 
 
