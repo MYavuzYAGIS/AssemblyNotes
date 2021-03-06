@@ -167,4 +167,73 @@ PointerToSymbolTable ,
 NumberOfSymbols not used anymore now that the debug info is stored in a separate file.
 
 
-https://www.youtube.com/watch?v=zwJIeD72E_E&list=PLUFkSN0XLZ-n_Na6jwqopTt1Ki57vMIc3&index=8
+#### OPTIONAL HEADER
+
+Optional header is not at all optional! It has to be there!
+
+In this header there are 6 entries we care about:
+
+>`Magic`
+
+Optional Header 0.
+
+**Magic is the true determinant** of whether this is a PE32 or PE32+ binary.
+Depending on the value, the optional header will be interpreted as having a coupe of 32 or 64 bit fields.
+
+**0x10B** ==> 32 bits, PE32
+**0x20B** ==> 64 bit , PE32+
+
+
+0x14C is giving hint maybe, in file headers. but the magic number in optional headers tells OS to how to load, so it is determinant of architecture.
+
+so one field(0x14c) can say it is 32 but this may say it is 64, we take this one.
+
+
+>`AddressOfEntryPoint`
+
+specifies the RVA(relative address) of where the loader starts executing code once it is completed loading the binary. Do not assume it just points to the beginning of .text section, or even the start of main().
+
+This is basically  saying once you finish all loading and stuff, go to this address and start executing starting from this address.
+
+this is very important!
+
+
+**so you have a malware and you dont know where it begins executing or it is stripped off, what you can do is to check this value and put a breakpoint for the debugger AND YOU CATCH IT BEFORE IT RUNS ANY CODE!**
+
+Except for one caveat, which is TLS, which will be covered later on.
+
+
+
+>`ImageBase`
+
+Image Base is the information pertains to where this program wants to be located in the memory. So in 64 bit system, it wants a 64 bit base, which correspods to ULONGLONG type
+
+In 64 bits, the type is ULONGLONG.
+
+
+>`SectionAlignment`
+
+
+
+
+>`FileAlignment`
+
+
+
+>`SizeOfImage`
+
+this is the amount of contiguous memory that must be reseved to load the binary into memory.
+
+
+>`DllCharacteristics`
+
+
+
+
+>``
+
+
+
+
+
+
