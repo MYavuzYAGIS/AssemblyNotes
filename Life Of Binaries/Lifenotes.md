@@ -216,6 +216,7 @@ The list of places must be fixed and kept in a special `relocations` (.reloc) se
 
 Hence, Microsoft does not support position-independent code.
 
+On linux systems, shared libraries will be executed as position independent code.
 
 
 >`SectionAlignment`
@@ -223,9 +224,6 @@ Hence, Microsoft does not support position-independent code.
 specifies that sections must be aligned on boundries which are multiples of this value. for example, if it is 0x1000, then you might expect to see sections starting agt 0x1000, 0x2000, 0x5000 etc.
 
 0x1000 is size of a page in intel 32 systems.
-
-
-
 
 
 >`FileAlignment`
@@ -277,13 +275,44 @@ This is the total size of the binary once it is mapped to the memory
 
 >`DllCharacteristics`
 
+Specifies some more important **security options like ASLR and non-executable memory regions for the loader and the effects are not limited to DLLs**
+
+![dynamic](../Life%20Of%20Binaries/img/dynamic.png)
+
+
+If the `Fixed Base Address` is set to Generate a relocation section, it means that /FIXED:NO flag is set and it generates relocations.
+
+
+![aslr](../Life%20Of%20Binaries/img/aslr.png)
 
 
 
->``
+in this pictiure, the part under the DLLsections on the right panel shows some info
+
+DynamicBase == ASLR is ON
+NX COMPAT == DEP/NX feaure
+
+and on the left panel, down there are sections , particularly `SECTION .reloc` this holds the data for relocations
+
+
+> So `Does this support ASLR?` means is the `Dynamic Base Flag is set?`.
 
 
 
+#### DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES]
+
+Array of officially 16 things and this is the storage of pointers from all of this other data structure that we are go over.
+
+This holds pointers of what exports it holds, 
+
+it holds pointers to what functions and import it holds
+
+it holds the pointers where the debug infromation can be found, where the digital signature is, where the relocation informatiion is, where the resources are etc.
+
+super informative header!!
+
+An example can be seen below:
 
 
 
+![data_entries](../Life%20Of%20Binaries/img/data_directory.png)
