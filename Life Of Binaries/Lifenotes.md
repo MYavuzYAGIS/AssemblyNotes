@@ -403,5 +403,56 @@ idata and edata will get merged with .data section so we wont see them in PE ana
     `Stuxnet` for example, used explorer.exe and .rsrc to load itself into the system.
 
 
+- **<span style="color:red;font-size:15px">.pdata</span>**
+
+    ARM, MIPS, and SH Windows CE compiles use PDATA structures to aid in stack walkint at run-time. This structure aids in debugging and exception processing.
 
 
+
+NOTE: IMMEDIATELY AFTER THE OPTIONAL HEADER , THE OS LOADER EXPECTS DATA SECTION. IF THERE IS EVEN A BYTE LONG PADDING, IT CONFUSES THE OS LOADER.
+
+
+this is how Section Headers are :
+
+![sectionheaders](../Life%20Of%20Binaries/img/sectionheaders.png)
+
+lets explain those column names:
+
+
+### <span style="color:green">SECTION HEADERS EXPLAINED</span>:
+
+- **<span style="color:red;font-size:15px">NAME[8]</span>**
+
+    Name is a byte array of ASCII characters. It is NOT guaranteed to be **null terminated**. So if you are trtying to parese a PE file yourself oyu need to be aware of that.
+
+    You can put whatever you want in there.it is generally for the human or linker, loader does not care about it at all.
+
+- **<span style="color:red;font-size:15px">Virtual Address</span>**
+
+    is the RVA of the section relative to OptionalHeader.ImageBase
+
+- **<span style="color:red;font-size:15px">Pointer to Raw Data</span>**
+
+    is a relative offset from the beginning of the file which says where the actual section data is stored.
+
+
+
+
+
+>NOTE
+
+```
+RVA == the virtual address.
+
+where is it mapped on the memory?
+
+Actual Value = ImageBase + RVA.
+
+Because RVA is an offset, we can just add RVA and ImageBase and get the Actual base value, which is the mapped address on the memory
+
+```
+
+
+
+
+https://www.youtube.com/watch?v=SBo-ZZBwkok&list=PLUFkSN0XLZ-n_Na6jwqopTt1Ki57vMIc3&index=11
