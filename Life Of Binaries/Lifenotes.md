@@ -468,7 +468,22 @@ Dynamic linking is when you **resolve pointers** to functions inside libraries *
 A statistically lniked executable is bloated compared to a dynamically linked on. But, on the other it is standalone, without outside dependendcides.
 
 
+#### Calling imported Functions
 
+![import](../Life%20Of%20Binaries/img/import.png)
+
+
+
+this line : `call     dword ptr ds:[01156238h]`  
+
+why does it dereference the memory address, like go to this memory address and pull the value out of it, instead of just giving the memoery or value itself?
+
+because this is actually an import!
+
+
+Data directory in PE file headers hold different kind of information. Of them are:
+
+export directory, import directory, resource directory, debug directory, relocation directory etc.
 
 
 
