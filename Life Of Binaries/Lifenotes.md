@@ -203,7 +203,6 @@ this is very important!
 Except for one caveat, which is TLS, which will be covered later on.
 
 
-
 >`ImageBase`
 
 Image Base is the information pertains to where this program wants to be located in the memory. So in 64 bit system, it wants a 64 bit base, which correspods to ULONGLONG type
@@ -224,6 +223,9 @@ In 64 bits, the type is ULONGLONG.
 
 this is the amount of contiguous memory that must be reseved to load the binary into memory.
 
+Os loader goes through code and accumulates all the required amount of memory , this plus this plus this etc, so it knows exactly  how much memory it needs. `sizeOfImage` basically gives this total amount.
+
+This is the total size of the binary once it is mapped to the memory
 
 >`DllCharacteristics`
 
