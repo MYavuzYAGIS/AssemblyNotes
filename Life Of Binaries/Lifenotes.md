@@ -1,5 +1,4 @@
-# Life Of Binaries (by Xeon Kovah)
-
+# <span style="color:blue"> Life Of Binaries </span>
 When we write a program in C or C++, and compile it, first, we flat everything on the surface. like all header files, all external/internal libraries are taken from their sources and compiler compiles this code. At the end of the process, we are ended up with a object file, `a.o` 
 
 so during the linking process, linker links all the object and other components and links them together to create the binary.
@@ -16,7 +15,7 @@ So linkes is basically :
 
 `There are 2 or more objects spit out from the previous process, they need to be linked togetger in the desired way. So this sorts and orders these objects and their internals to craete a executably or a library file.`
 
-#### Compilers:
+## <span style="color:blue">Compilers</span>:
 
 compilers go with the expression trees. In the code , there is an expression tree where code and data are in harmony. For example you declare a variable , and only after that you use it.
 So, it is like create stack, open space for var, assign value to a var etc. this is the tree.
@@ -27,8 +26,7 @@ push ebp.
 
 then, for sake of argument, we have int a =4; what happens, push 4 here. So compiler follows this kind of a tree logic.
 
-
-#### Executables:
+## <span style="color:blue">Executables</span>:
 
 
 Windows ==> PE (Portable Executable)
@@ -39,11 +37,11 @@ Mac ==> Mach-o ( Mach Object)
 
 There are different target binary formats :
 
-> Executable:
+> **Executable**:
 
 .exe on windows, no suffix on Linux. A program which will either stand completely on its own containing all necessary code, or which will request external libraries taht it will depend on.
 
->Dynamic Library:
+>**Dynamic Library:**
 
 .dll on windows and .so in linux.(.so is shared object) needs to be loaded by some other protgram in order for any of the code to be executed. the library may have some code which is **automatically** executed at load time. (the DllMain() on windows or init() on linux) This is as opposed to a library whiuch executes non of its own code and only provides codes to other programs
 
@@ -53,13 +51,13 @@ It starts running initialization code, and step by step calls other funcitons or
 
 this is where attackers employ **DLL injection attacks**
 
-> Static Library:
+> **Static Library:**
 
 .lib on windows and .a on Linux. Static libraries are a bunch of object files with some specific header info to describe the organization of files.
 
 these are used when you want to compile all files together to later be linked against statically. so you say to your linker basically that do not use the `printf` or `scanf` functionj in the standard library but use the one I gave you through the static libray.
 
-> Common Windows PE file Extensions: 
+> **Common Windows PE file Extensions: **
 
 - exe ==> executable file
 - dll ==> dynamic link library
@@ -72,7 +70,7 @@ So screensavers are full executables, which can deliver malware!
 
 
 
-#### PE DOS HEADER
+## <span style="color:green">PE DOS HEADER</span>:
 
 When a PO Dos file is opened and seen, there are bunch of header files are imported and executed. Two of these are 
 
@@ -104,7 +102,7 @@ so there is .exe, there is 'MZ'  and rthere is DOS MODE sign. three of these are
 
 
 
-#### PE NT HEADER , FILE HEADER
+## <span style="color:Yellow">PE NT HEADER ED HEADER</span>:
 
 this is Image NT Headers. which containes 3 headers actually. signature, file header, optional header.
 
@@ -167,7 +165,7 @@ PointerToSymbolTable ,
 NumberOfSymbols not used anymore now that the debug info is stored in a separate file.
 
 
-#### OPTIONAL HEADER
+## <span style="color:green">OPTIONAL HAEDER</span>:
 
 Optional header is not at all optional! It has to be there!
 
@@ -322,3 +320,44 @@ An example can be seen below:
 > Playing bitHunt Scavenger level 2 here is my result
 
 ![round2](../Life%20Of%20Binaries/img/round2.png)
+
+
+## <span style="color:green">SECTION HEADERS</span>:
+
+Section group portions of code or data which hae similar purpose, or should have similar memory permissions.
+
+Number of section headers can be found where? at `File headers` section.
+
+This groups similar memory permissions , bunches them up and then let the OS loader loads same permissions once they are mapped in memory
+
+So think of the role of linker? links all these different objects and data etc? It works like this:
+
+Take this bunch, this is executable but not writable; this data is only readable, that one is executable and writable. these bunches and permissions.
+
+and then linker links all of them into the final form of the binary
+
+**so what are the common seciton names?**
+
+- **<span style="color:red;font-size:15px">.text</span>**
+  
+  Code which should neve be paged out of memory to disk
+
+- **<span style="color:red;font-size:15px">.data</span>**
+
+    read/write data(globals)
+- **<span style="color:red;font-size:15px">.rdata</span>**
+  
+    read-only data(strings)
+
+- **<span style="color:red;font-size:15px">.bss</span>**
+  
+    Block Started by Symbol or Block Storage Start, depending on who you ask :) 
+    In practice, the .bss seems to merged into the .data section by the linker for the binaries
+
+- **<span style="color:red;font-size:15px">.idata</span>**
+
+    Import address table. In practice, seems to get merged with .text or .rdata
+
+- **<span style="color:red;font-size:15px">.edata</span>**
+    
+    Export infromation
