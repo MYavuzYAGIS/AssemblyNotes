@@ -340,11 +340,17 @@ and then linker links all of them into the final form of the binary
 
 - **<span style="color:red;font-size:15px">.text</span>**
   
-  Code which should neve be paged out of memory to disk
+  Code which should never be paged out of memory to disk. This is where the actual code goes.
+  Especially in windowns kernel, some code can be load onto memeory or etc, but .text one is always non-pageable, it never is paged to disk.
+
+  it always stays on memory
 
 - **<span style="color:red;font-size:15px">.data</span>**
 
-    read/write data(globals)
+    read/write data(globals).  So for example some code resides in stack, like local variable etc. (in linux this is .rodata) these are strings, global variables that can be used in different places. 
+
+
+
 - **<span style="color:red;font-size:15px">.rdata</span>**
   
     read-only data(strings)
@@ -354,6 +360,10 @@ and then linker links all of them into the final form of the binary
     Block Started by Symbol or Block Storage Start, depending on who you ask :) 
     In practice, the .bss seems to merged into the .data section by the linker for the binaries
 
+    Takes up space in memeory but not in disk. actually linker links and merges the bss section with the text section or it is merged with the data section.
+
+
+
 - **<span style="color:red;font-size:15px">.idata</span>**
 
     Import address table. In practice, seems to get merged with .text or .rdata
@@ -361,3 +371,37 @@ and then linker links all of them into the final form of the binary
 - **<span style="color:red;font-size:15px">.edata</span>**
     
     Export infromation
+
+
+All these can be seen accross diffrent file formats, different operating systems. so it is a shared value.
+
+idata and edata will get merged with .data section so we wont see them in PE analysis section in section. 
+
+
+
+- **<span style="color:red;font-size:15px">PAGE*</span>**
+  
+  code/data which it is fine to page out to  disk if you are running low in memory.
+
+    Essentially means that these section names in kernel modules will be like `Page verify` or `Page Log`(lock?). so these sections are prefixed with `PAGE`.
+
+
+
+- **<span style="color:red;font-size:15px">.reloc</span>**
+
+    Relocation information for where to modifyhardcoded addresses which assume that the code was loaded at its preffered base address in memory.
+
+    if data needs to be moved around, it is needed to be known that this is the data strructure, here is the important piece of information etc.
+
+
+- **<span style="color:red;font-size:15px">.rsrc</span>**
+  
+  Resources. Lots of possible stuff from icons to other embedded binaries. the section has structures organizing it sort of like a filesystem.
+
+    some rootkits actually hide behind this and show thyemselves as resources, then when they are dumped they are loaded into kernel modules and running in the kernel etc.
+
+    `Stuxnet` for example, used explorer.exe and .rsrc to load itself into the system.
+
+
+
+
